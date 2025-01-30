@@ -1,0 +1,12 @@
+.error-message {
+    animation: show ease-in 0.3s;
+}
+
+@keyframes show {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

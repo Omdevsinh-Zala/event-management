@@ -1,4 +1,8 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideZoneChangeDetection,
+  isDevMode,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -31,15 +35,17 @@ import {
 } from '@angular/fire/remote-config';
 import { getVertexAI, provideVertexAI } from '@angular/fire/vertexai';
 import { environment } from '../environments/environment';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { provideEffects } from '@ngrx/effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideFirebaseApp(() =>
-      initializeApp(environment.firebaseConfig)
-    ),
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideAnalytics(() => getAnalytics()),
     ScreenTrackingService,
@@ -61,5 +67,10 @@ export const appConfig: ApplicationConfig = {
     provideStorage(() => getStorage()),
     provideRemoteConfig(() => getRemoteConfig()),
     provideVertexAI(() => getVertexAI()),
-  ],
+    provideAnimationsAsync(),
+    provideAnimationsAsync(),
+    provideStore(),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+    provideEffects()
+],
 };
