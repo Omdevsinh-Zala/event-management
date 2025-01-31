@@ -5,12 +5,17 @@
 @let passMax = registerForm().get('password')?.touched && registerForm().get('password')?.dirty && registerForm().get('password')?.hasError('maxlength');
 
 <div class="w-full h-full flex flex-col gap-4 items-center justify-center">
-  <form class="p-3 w-96 flex gap-3 flex-col" [formGroup]="registerForm()">
-    <button
-      class="transition-colors duration-200 w-full flex items-center px-4 py-2 border rounded-md hover:border-slate-400"
+  <form class="p-3 w-96 flex gap-4 flex-col" [formGroup]="registerForm()">
+    <!-- <button
+      class="transition-colors duration-200 w-full flex items-center px-4 py-2 border rounded-md hover:border-slate-400 disabled:opacity-70 hover:disabled:cursor-not-allowed"
       type="button"
       role="button"
+      [disabled]="(isSigninProgress | async)"
+      (click)="registerWithGmail()"
     >
+    @if (gmailLoading$ | async) {
+      <mat-spinner class="mx-auto !h-[24px] !w-[24px]" ></mat-spinner>
+    } @else { 
       <span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -38,6 +43,7 @@
           ></path>
         </svg>
       </span>
+    }
       <span class="flex items-center justify-center w-4/5"
         >Register with Google</span
       >
@@ -45,27 +51,29 @@
     <div class="w-full relative text-center">
       <hr class="absolute border-black left-0 right-0 top-1/2 -z-10" />
       <span class="text-black bg-white px-1">or</span>
-    </div>
+    </div> -->
+    <h1 class="mx-auto text-3xl">Register</h1>
     <div class="flex flex-col gap-7 w-full">
       <div class="relative">
         <input
           class="transition-all duration-200 peer outline-none border focus:border-slate-400 w-full rounded-md p-3"
           formControlName="email"
           type="email"
+          autocomplete="new-password"
           #email
         />
         <label
           class="transition-all duration-200 absolute text-md left-3 top-1/2 -translate-y-1/2 bg-white peer-focus:top-0 peer-focus:text-xs peer-focus:px-1 peer-focus:left-2 opacity-60 peer-focus:opacity-100 pointer-events-none"
           [ngClass]="
             email.value.trim() != ''
-              ? 'top-0 text-xs px-1 !left-2 opacity-100'
+              ? '!top-0 !text-xs !px-1 !left-2 !opacity-100'
               : ''
           "
           >Email<span class="ps-[2px]" [ngClass]="[emailRequired || emailValid ? 'text-pink-600 peer-focus:text-inherit' : '']">*</span></label
         >
         @if (emailRequired) {
         <div
-          class="transition-all duration-200 absolute text-sm text-pink-600 left-2 -bottom-5 error-message"
+          class="transition-all duration-200 absolute text-sm text-pink-600 left-2 -bottom-5 error-message peer-focus:hidden"
         >
           Please enter email.
         </div>
@@ -81,21 +89,23 @@
         <input
           class="transition-all duration-200 peer outline-none border focus:border-slate-400 w-full rounded-md p-3"
           formControlName="password"
-          type="text"
+          [type]="showPassword() ? 'text' : 'password'"
+          autocomplete="new-password"
           #password
         />
+        <button class="transition-all duration-200 absolute right-2 top-1/2 -translate-y-3" type="button" (click)="showPassword.set(!showPassword())" role="button" ><mat-icon>{{ showPassword() ? "visibility" : "visibility_off" }}</mat-icon></button>
         <label
           class="transition-all duration-200 absolute text-md left-3 top-1/2 -translate-y-1/2 bg-white peer-focus:top-0 peer-focus:text-xs peer-focus:px-1 peer-focus:left-2 opacity-60 peer-focus:opacity-100 pointer-events-none"
           [ngClass]="
-            password.value.trim() != ''
-              ? 'top-0 text-xs px-1 !left-2 opacity-100'
+            password.value != ''
+              ? '!top-0 !text-xs !px-1 !left-2 !opacity-100'
               : ''
           "
           >Password<span class="ps-[2px]" [ngClass]="[passValid || passMin || passMax ? 'text-pink-600 peer-focus:text-inherit' : '']">*</span></label
         >
         @if (passValid) {
         <div
-          class="transition-all duration-200 absolute text-sm text-pink-600 left-2 -bottom-5 error-message"
+          class="transition-all duration-200 absolute text-sm text-pink-600 left-2 -bottom-5 error-message peer-focus:hidden"
         >
           Please enter password.
         </div>
@@ -114,14 +124,18 @@
         }
       </div>
       <button
-        class="transition-all duration-200 border rounded-md py-2 text-black border-slate-400 bg-slate-200 hover:bg-slate-300"
+        class="transition-all duration-200 border rounded-md py-2 text-black border-slate-400 bg-slate-200 hover:bg-slate-300 hover:disabled:cursor-not-allowed"
         type="button"
         role="button"
-        (click)="submit()"
-        [disabled]="!registerForm().valid"
+        (click)="registerWithEmail()"
+        [disabled]="!registerForm().valid || (isSigninProgress | async)"
         [matTooltip]="!registerForm().valid ? 'Fill the above fields first' : ''"
       >
-        Submit
+        @if(emailLoading$ | async) {
+          <mat-spinner class="mx-auto !h-[24px] !w-[24px]" ></mat-spinner>
+        } @else {
+          Submit
+        }
       </button>
     </div>
   </form>

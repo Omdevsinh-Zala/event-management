@@ -6,7 +6,7 @@ import { Auth, authState } from '@angular/fire/auth';
 })
 export class AuthService {
   private readonly auth = inject(Auth);
-  private readonly authSignal = computed(() => inject(Auth));
+  private readonly authSignal = computed(() => this.auth);
   private readonly authState = authState(this.auth);
   private readonly authSignalState = computed(() => this.authState);
 

@@ -36,9 +36,11 @@ import {
 import { getVertexAI, provideVertexAI } from '@angular/fire/vertexai';
 import { environment } from '../environments/environment';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideStore } from '@ngrx/store';
+import { provideState, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
+import { FormKey, FormReducer } from './forms/store/form.reducer';
+import { FormsEfects } from './forms/store/form.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -70,7 +72,8 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideAnimationsAsync(),
     provideStore(),
+    provideState(FormKey, FormReducer),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    provideEffects()
+    provideEffects([FormsEfects]),
 ],
 };

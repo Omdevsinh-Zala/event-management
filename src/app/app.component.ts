@@ -26,7 +26,6 @@ export class AppComponent implements OnInit, OnDestroy {
         const uid = signal(this.localStorage.getItem('User'));
         if (data == null || data.uid !== uid()) {
           this.localStorage.removeItem('User');
-          this.router.navigateByUrl('login');
         }
       },
     });
