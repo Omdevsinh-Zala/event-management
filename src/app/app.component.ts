@@ -3,10 +3,11 @@ import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { Subscription } from 'rxjs';
 import { LocalstorageService } from './services/localstorage.service';
+import { MessageComponent } from "./message/message.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, MessageComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
