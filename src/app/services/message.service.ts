@@ -14,7 +14,6 @@ export class MessageService {
     const index = this.successMessages.length
     setTimeout(() => {
       this.clearValue(this.successMessages, index)
-      console.log(this.successMessages())
     }, this.time())
   }
 
