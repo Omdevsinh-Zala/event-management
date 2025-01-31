@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, Signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import {
@@ -33,6 +33,7 @@ import { RegisterUser } from '../module';
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
   private fb = inject(FormBuilder);
@@ -55,7 +56,6 @@ export class LoginComponent {
   );
 
   showPassword = signal(false);
-
   submit() {
     const email = this.loginForm().value.email;
     const password = this.loginForm().value.password;

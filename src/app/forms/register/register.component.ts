@@ -1,5 +1,5 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, computed, inject, signal, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, Signal } from '@angular/core';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -32,6 +32,7 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent {
   private fb = inject(FormBuilder);
