@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { MessageComponent } from "./message/message.component";
   imports: [RouterOutlet, MessageComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'event-management';
