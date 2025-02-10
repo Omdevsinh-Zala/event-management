@@ -57,23 +57,23 @@
           #email
         />
         <label
-          class="transition-all duration-200 absolute text-md left-3 top-1/2 -translate-y-1/2 bg-white peer-focus:top-0 peer-focus:text-xs peer-focus:px-1 peer-focus:left-2 opacity-60 peer-focus:opacity-100 pointer-events-none"
+          class="label"
           [ngClass]="
             email.value.trim() != ''
-              ? '!top-0 !text-xs !px-1 !left-2 !opacity-100'
+              ? 'float-label'
               : ''
           "
           >Email<span class="ps-[2px]" [ngClass]="[emailRequired || emailValid ? 'text-pink-600 peer-focus:text-inherit' : '']">*</span></label
         >
         @if (emailRequired) {
         <div
-          class="transition-all duration-200 absolute text-sm text-pink-600 left-2 -bottom-5 error-message peer-focus:hidden"
+          class="form-error-msg"
         >
           Please enter email.
         </div>
         } @if (emailValid) {
         <div
-          class="transition-all duration-200 absolute text-sm text-pink-600 left-2 -bottom-5 error-message peer-focus:hidden"
+          class="form-error-msg"
         >
           Please enter valid email.
         </div>
@@ -90,29 +90,29 @@
         />
         <button class="transition-all duration-200 absolute right-2 top-1/2 -translate-y-3" type="button" (click)="showPassword.set(!showPassword())" role="button" ><mat-icon>{{ showPassword() ? "visibility" : "visibility_off" }}</mat-icon></button>
         <label
-          class="transition-all duration-200 absolute text-md left-3 top-1/2 -translate-y-1/2 bg-white peer-focus:top-0 peer-focus:text-xs peer-focus:px-1 peer-focus:left-2 opacity-60 peer-focus:opacity-100 pointer-events-none"
+          class="label"
           [ngClass]="
             password.value != ''
-              ? '!top-0 !text-xs !px-1 !left-2 !opacity-100'
+              ? 'float-label'
               : ''
           "
           >Password<span class="ps-[2px]" [ngClass]="[passValid || passMin || passMax ? 'text-pink-600 peer-focus:text-inherit' : '']">*</span></label
         >
         @if (passValid) {
         <div
-          class="transition-all duration-200 absolute text-sm text-pink-600 left-2 -bottom-5 error-message peer-focus:hidden"
+          class="form-error-msg"
         >
           Please enter password.
         </div>
         } @if (passMax) {
         <div
-          class="transition-all duration-200 absolute text-sm text-pink-600 left-2 -bottom-5 error-message peer-focus:hidden"
+          class="form-error-msg"
         >
           Password must not exceed 16 characters.
         </div>
         } @if (passMin) {
         <div
-          class="transition-all duration-200 absolute text-sm text-pink-600 left-2 -bottom-5 error-message peer-focus:hidden"
+          class="form-error-msg"
         >
           Password must be at least 8 characters long.
         </div>
