@@ -1,7 +1,7 @@
 import {
   ApplicationConfig,
-  provideZoneChangeDetection,
   isDevMode,
+  provideExperimentalZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -44,7 +44,7 @@ import { FormsEfects } from './forms/store/form.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
