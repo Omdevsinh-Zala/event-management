@@ -1,8 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, user } from '@angular/fire/auth';
+import { createUserWithEmailAndPassword, deleteUser, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
 import { AuthService } from './auth.service';
 import { RegisterUser } from '../forms/module';
-import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,6 @@ export class LoginService {
   }
 
   // async loginWithGoogle() {
-  //   console.log('Helo')
   //   const provider = new GoogleAuthProvider();
   //   // provider.addScope('profile');
   //   // provider.addScope('email');
@@ -31,5 +29,9 @@ export class LoginService {
 
   singOut() {
     return signOut(this.authService.getAuth());
+  }
+
+  deleteUser() {
+    return deleteUser(this.authService.getAuth().currentUser!)
   }
 }

@@ -4,7 +4,7 @@
 @let passMin = registerForm().get('password')?.touched && registerForm().get('password')?.dirty && registerForm().get('password')?.hasError('minlength');
 @let passMax = registerForm().get('password')?.touched && registerForm().get('password')?.dirty && registerForm().get('password')?.hasError('maxlength');
 
-<div class="w-full h-full flex flex-col gap-4 items-center justify-center">
+<div class="container mx-auto px-2 sm:px-0 w-full h-full flex flex-col gap-4 items-center justify-center">
   <form class="p-3 w-96 flex gap-4 flex-col" [formGroup]="registerForm()">
     <!-- <button
       class="transition-colors duration-200 w-full flex items-center px-4 py-2 border rounded-md hover:border-slate-400 disabled:opacity-70 hover:disabled:cursor-not-allowed"
