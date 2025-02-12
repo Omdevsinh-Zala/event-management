@@ -17,4 +17,8 @@ export class AuthService {
   getAuth() {
     return this.authSignal();
   }
+
+  getuid() {
+    return this.getAuth().currentUser?.uid!
+  }
 }
