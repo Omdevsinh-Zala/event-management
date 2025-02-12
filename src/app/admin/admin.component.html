@@ -1,0 +1,98 @@
+@let titleRequired = eventForm().get('title')?.touched && eventForm().get('title')?.dirty && eventForm().get('title')?.hasError('required');
+@let titleEmpty = eventForm().get('title')?.value == '';
+@let imageRequired = eventForm().get('image')?.touched && eventForm().get('image')?.dirty && eventForm().get('image')?.hasError('required');
+@let imageEmpty = eventForm().get('image')?.value == '';
+@let placeRequired = eventForm().get('place')?.touched && eventForm().get('place')?.dirty && eventForm().get('place')?.hasError('required');
+@let placeEmpty = eventForm().get('place')?.value == '';
+@let desRequired = eventForm().get('description')?.touched && eventForm().get('description')?.dirty && eventForm().get('description')?.hasError('required');
+@let desEmpty = eventForm().get('description')?.value == '';
+@let timeRequired = eventForm().get('time')?.touched && eventForm().get('time')?.dirty && eventForm().get('time')?.hasError('required');
+@let timeEmpty = eventForm().get('time')?.value == '';
+@let participentiosRequired = eventForm().get('participentios')?.touched && eventForm().get('participentios')?.dirty && eventForm().get('participentios')?.hasError('required');
+@let participentiosEmpty = eventForm().get('participentios')?.value == '';
+
+<div class="container mx-auto px-2 md:p-0">
+  <div class="flex justify-between items-center pt-2">
+    <div class="relative">
+      <input
+        class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3"
+        type="search"
+        [(ngModel)]="searchEvent"
+        autocomplete="new-password"
+        #search
+      />
+      <label
+        class="label"
+        [ngClass]="search.value != '' ? 'float-label' : ''"
+        >Search</label
+      >
+    </div>
+    <button
+    (click)="toggleModel()"
+      class="transition-all duration-300 flex items-center gap-1 border rounded-md py-2 px-4 text-black border-slate-400 bg-slate-200 hover:bg-slate-300 hover:disabled:cursor-not-allowed"
+      [disabled]="showModel() && showaddEventModel()"
+    >
+      <mat-icon>add</mat-icon>Add event
+    </button>
+  </div>
+  <h2 class="text-4xl py-4">Events</h2>
+  @if (showModel() == true) {
+      <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black transition-all duration-300 scale-0" [ngClass]="showaddEventModel() ? 'scale-100 opacity-100 !visible' : ''">
+          <div class="p-3 md:p-0 relative w-dvw h-dvh" (click)=" (titleEmpty || imageEmpty || desEmpty || placeEmpty || timeEmpty || participentiosEmpty) ? toggleModel() : ''">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full md:w-1/2 md:h-1/2" (click)="$event.stopPropagation()">
+                <div class="relative flex flex-col gap-2 w-full h-full rounded-lg p-5 bg-white transition-all duration-500 scale-0" [ngClass]="showaddEventModel() ? 'scale-100' : ''">
+                    <h3 class="text-3xl">Add Event</h3>
+                    <form class="py-3 px-8 flex flex-col gap-3" [formGroup]="eventForm()">
+                        <div class="relative">
+                            <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3" 
+                                type="text" formControlName="title" id="title" autocomplete="new-password" #title>
+                            <label class="label" [ngClass]="title.value.trim() != '' ? 'float-label' : ''">Title<span class="ps-[2px]" [ngClass]="[titleRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                            @if (titleRequired) {
+                                <div
+                                    class="form-error-msg"
+                                >
+                                Please enter title.
+                                </div>
+                            }
+                        </div>
+                        <div class="relative flex justify-between gap-4 h-32">
+                            <div class="w-1/2 flex justify-start items-center">
+                                <div class="relative w-full">
+                                    <div class="absolute my-auto flex gap-5 items-center">
+                                        <button class="border border-slate-400 py-2 px-4 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-md">Upload image</button>
+                                        @if(file.files?.[0]) {
+                                            <p class="w-32 overflow-hidden whitespace-nowrap text-ellipsis" >{{eventForm().get('image')?.value.files}}</p>
+                                        }
+                                    </div>
+                                    <input
+                                    class="w-[132px] opacity-0 file:border-slate-300 file:hover:bg-slate-200 file:bg-slate-100 file:py-2 file:px-4 file:border file:rounded-lg file:transition-colors file:duration-300 file:hover:cursor-pointer"
+                                    type="file"
+                                    formControlName="image"
+                                    (change)="work()"
+                                    #file
+                                    />
+                                    @if (imageRequired) {
+                                        <div
+                                            class="form-error-msg"
+                                        >
+                                        Please provide image.
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="w-1/2">
+                                <div class="border border-slate-300 rounded-lg h-full w-3/4 mx-auto relative">
+                                    <img class="absolute object-cover top-0 left-0 w-full pb-32">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="absolute bottom-0 left-0 right-0 p-5 text-right">
+                        <button class="py-2 px-4 border border-slate-400 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-lg leading-none">Save</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+      </div>
+  }
+</div>
