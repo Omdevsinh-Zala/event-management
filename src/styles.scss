@@ -34,11 +34,11 @@ body {
 
 @layer components {
   .label {
-    @apply transition-all duration-200 absolute left-3 text-base top-1/2 -translate-y-1/2 bg-white peer-focus:top-0 peer-focus:text-xs peer-focus:px-1 peer-focus:left-2 opacity-60 peer-focus:opacity-100 pointer-events-none
+    @apply transition-all duration-200 absolute left-3 text-base top-1/2 -translate-y-1/2 bg-white peer-focus:top-0 peer-focus:text-xs peer-focus:px-1 peer-focus:left-2 opacity-60 peer-focus:opacity-100 pointer-events-none;
   }
 
   .float-label {
-    @apply top-0 !text-xs !px-1 !left-2 !opacity-100
+    @apply text-xs !top-0 !px-1 !left-2 !opacity-100;
   }
 
   .form-error-msg {
@@ -54,4 +54,19 @@ body {
   to {
       opacity: 1;
   }
+}
+
+/* Or if you prefer direct styling */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  scrollbar-width: thin;
+  scrollbar-track-color: #f1f5f9;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-slate-100 rounded-lg;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-lg hover:bg-slate-400;
 }
