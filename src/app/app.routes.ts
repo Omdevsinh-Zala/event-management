@@ -10,6 +10,10 @@ export const routes: Routes = [
         loadComponent:() => import('./forms/register/register.component').then((m) => m.RegisterComponent)  
     },
     {
+        path: 'admin',
+        loadComponent:() => import('./admin/admin.component').then((m) => m.AdminComponent)  
+    },
+    {
         path: '',
         loadComponent: () => import('./primary-page/primary-page.component').then((m) => m.PrimaryPageComponent),
         children:[

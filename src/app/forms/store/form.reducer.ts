@@ -21,12 +21,12 @@ const formFeature = createFeature({
     name: 'Form',
     reducer: createReducer(
         initialState,
-        on(formActions.registerUserWithEmailAndPassword, (state, action) => ({...state, isEmailLoading: true, sigInProgress: true})),
-        on(formActions.registerUserWithGoogle, (state, action) => ({...state, isGmailLoading: true, sigInProgress: true})),
-        on(formActions.loginUserWithEmailAndPassword, (state, action) => ({...state, isEmailLoading: true, sigInProgress: true})),
-        on(formActions.loginUserWithGoogle, (state, action) => ({...state, isGmailLoading: true, sigInProgress: true})),
-        on(formActions.registerUserWithFirstore, (state, action) => ({...state, sigInProgress: true})),
-        on(formActions.loginUserWithFirstore, (state, action) => ({...state, sigInProgress: true})),
+        on(formActions.registerUserWithEmailAndPassword, (state) => ({...state, isEmailLoading: true, sigInProgress: true})),
+        on(formActions.registerUserWithGoogle, (state) => ({...state, isGmailLoading: true, sigInProgress: true})),
+        on(formActions.loginUserWithEmailAndPassword, (state) => ({...state, isEmailLoading: true, sigInProgress: true})),
+        on(formActions.loginUserWithGoogle, (state) => ({...state, isGmailLoading: true, sigInProgress: true})),
+        on(formActions.registerUserWithFirstore, (state) => ({...state, sigInProgress: true})),
+        on(formActions.loginUserWithFirstore, (state) => ({...state, sigInProgress: true})),
         on(formActions.success, (state, action) => ({...state, isEmailLoading: false, isGmailLoading:false, message: action.message, sigInProgress: false})),
         on(formActions.error, (state, action) => ({...state, isEmailLoading: false, isGmailLoading:false, error: action.error, sigInProgress: false}))
     )

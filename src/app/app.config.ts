@@ -41,6 +41,9 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 import { FormKey, FormReducer } from './forms/store/form.reducer';
 import { FormsEfects } from './forms/store/form.effects';
+import { AdminEffects } from './admin/store/admin.effects';
+import { adminKey, adminReducer } from './admin/store/admin.reducer';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -73,7 +76,9 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideStore(),
     provideState(FormKey, FormReducer),
+    provideState(adminKey, adminReducer),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    provideEffects([FormsEfects]),
+    provideEffects([FormsEfects, AdminEffects]),
+    provideHttpClient()
 ],
 };

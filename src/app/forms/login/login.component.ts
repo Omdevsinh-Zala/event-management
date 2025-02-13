@@ -25,7 +25,6 @@ import { RegisterUser } from '../module';
     MatIconModule,
     CommonModule,
     ReactiveFormsModule,
-    MatIconModule,
     RouterLink,
     MatTooltipModule,
     MatProgressSpinnerModule,
