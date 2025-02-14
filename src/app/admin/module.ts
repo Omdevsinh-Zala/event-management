@@ -4,5 +4,5 @@ export interface EventData {
     place: string,
     description: string,
     date: string,
-    participentios: string[]
+    participants: string[]
 }
