@@ -1,56 +1,58 @@
 @let titleRequired = eventForm().get('title')?.touched && eventForm().get('title')?.dirty && eventForm().get('title')?.hasError('required');
-@let titleEmpty = eventForm().get('title')?.value == '';
+@let titleEmpty = eventForm().get('title')?.value == '' || eventForm().get('title')?.value == null;
 @let imageRequired = eventForm().get('image')?.touched && eventForm().get('image')?.dirty && eventForm().get('image')?.hasError('required');
-@let imageEmpty = eventForm().get('image')?.value == '';
+@let imageEmpty = eventForm().get('image')?.value == '' || eventForm().get('image')?.value == null;
 @let placeRequired = eventForm().get('place')?.touched && eventForm().get('place')?.dirty && eventForm().get('place')?.hasError('required');
-@let placeEmpty = eventForm().get('place')?.value == '';
+@let placeEmpty = eventForm().get('place')?.value == '' || eventForm().get('place')?.value == null;
 @let desRequired = eventForm().get('description')?.touched && eventForm().get('description')?.dirty && eventForm().get('description')?.hasError('required');
-@let desEmpty = eventForm().get('description')?.value == '';
+@let desEmpty = eventForm().get('description')?.value == '' || eventForm().get('description')?.value == null;
 @let dateRequired = eventForm().get('date')?.touched && eventForm().get('date')?.dirty && eventForm().get('date')?.hasError('required');
-@let dateEmpty = eventForm().get('date')?.value == '';
-<!-- @let participentiosRequired = eventForm().get('participentios')?.touched && eventForm().get('participentios')?.dirty && eventForm().get('participentios')?.hasError('required');
-@let participentiosEmpty = eventForm().get('participentios')?.value == ''; -->
+@let dateEmpty = eventForm().get('date')?.value == '' || eventForm().get('date')?.value == null;
+<!-- @let participantsRequired = eventForm().get('participants')?.touched && eventForm().get('participants')?.dirty && eventForm().get('participants')?.hasError('required');
+@let participantsEmpty = eventForm().get('participants')?.value == ''; -->
 
 <div class="container mx-auto px-2 md:p-0">
-  <div class="flex justify-between items-center pt-2">
-    <div class="relative w-80">
+  <div class="flex justify-between items-start pt-2 flex-col sm:flex-row sm:items-center sm:gap-0 gap-5">
+    <div class="relative w-full sm:w-80">
       <input
         class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3"
         type="search"
         [(ngModel)]="searchEvent"
         autocomplete="new-password"
+        id="search"
         #search
       />
       <label
         class="label"
+        for="search"
         [ngClass]="search.value != '' ? 'float-label' : ''"
         >Search</label
       >
     </div>
     <button
     (click)="toggleModel()"
-      class="transition-all duration-300 w-36 flex items-center gap-1 border rounded-md py-2 px-4 text-black border-slate-400 bg-slate-200 hover:bg-slate-300 hover:disabled:cursor-not-allowed"
+      class="transition-all duration-300 sm:w-36 flex items-center gap-1 border rounded-md py-2 px-4 text-black border-slate-400 bg-slate-200 hover:bg-slate-300 hover:disabled:cursor-not-allowed"
       [disabled]="modelOpen$() | async"
     >
     @if (modelOpen$() | async) {
         <mat-spinner diameter="22" class="mx-auto" ></mat-spinner>
     } @else {
-        <mat-icon>add</mat-icon>Add event
+        <mat-icon>add</mat-icon><span class="hidden sm:inline" >Add event</span>
     }
     </button>
   </div>
   <h2 class="text-4xl py-4">Events</h2>
   @if ((showModel$() | async) == true) {
-      <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black transition-all duration-300 scale-0" [ngClass]="(showaddEventModel$() | async) ? 'scale-100 opacity-100 !visible' : ''">
-          <div class="p-3 md:p-0 relative w-dvw h-dvh" (click)=" (titleEmpty && imageEmpty && desEmpty && placeEmpty && dateEmpty) && !eventForm().valid ? toggleModel() : ''">
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full md:w-1/2 md:h-2/3" (click)="$event.stopPropagation()">
+      <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black transition-all duration-300 scale-0 z-10" [ngClass]="(showaddEventModel$() | async) ? 'scale-100 opacity-100 !visible' : ''">
+          <div class="relative w-dvw h-dvh" (click)=" (titleEmpty && imageEmpty && desEmpty && placeEmpty && dateEmpty) ? toggleModel() : ''">
+            <div class="p-3 lg:p-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 h-11/12 lg:w-1/2 lg:h-2/3" (click)="$event.stopPropagation()">
                 <div class="relative flex flex-col gap-2 w-full h-full rounded-lg p-5 bg-white transition-all duration-500 scale-0" [ngClass]="(showaddEventModel$() | async) ? 'scale-100' : ''">
                     <h3 class="text-3xl">Add Event</h3>
                     <form class="py-3 px-8 flex flex-col gap-6 overflow-y-scroll custom-scrollbar" [formGroup]="eventForm()">
                         <div class="relative shrink-0">
                             <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3" 
                                 type="text" formControlName="title" id="title" autocomplete="new-password" #title>
-                            <label class="label" [ngClass]="title.value.trim() != '' ? 'float-label' : ''">Title<span class="ps-[2px]" [ngClass]="[titleRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                            <label class="label" for="title" [ngClass]="title.value.trim() != '' ? 'float-label' : ''">Title<span class="ps-[2px]" [ngClass]="[titleRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
                             @if (titleRequired) {
                                 <div
                                     class="form-error-msg"
@@ -59,13 +61,13 @@
                                 </div>
                             }
                         </div>
-                        <div class="relative flex justify-between gap-4 h-32 shrink-0">
-                            <div class="w-1/2 flex justify-start items-center">
+                        <div class="relative flex justify-[unset] gap-4 h-max shrink-0 2xl:h-32 flex-col 2xl:flex-row 2xl:justify-between">
+                            <div class="w-full 2xl:w-1/2 flex justify-start items-center h-24 sm:h-[unset]">
                                 <div class="relative w-full">
-                                    <div class="absolute my-auto flex gap-5 items-center w-full">
+                                    <div class="absolute my-auto flex gap-2 2xl:gap-5 items-start w-full justify-between 2xl:justify-[unset] flex-col sm:flex-row sm:items-center">
                                         <button class="border border-slate-400 py-2 px-4 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-md">Upload image</button>
                                         @if(fileName()) {
-                                            <div class="relative w-1/2">
+                                            <div class="relative w-full sm:w-1/2">
                                                 <p class="w-40 overflow-hidden whitespace-nowrap text-ellipsis" >{{fileName()}}</p>
                                                 <button class="absolute right-0 top-1/2 -translate-y-1/2 bg-transparent border-0 leading-none hover:text-red-500 transition-colors duration-300" (click)="clearUpload()" ><mat-icon>cancel</mat-icon></button>
                                             </div>
@@ -75,8 +77,9 @@
                                         class="w-[132px] opacity-0 file:border-slate-300 file:hover:bg-slate-200 file:bg-slate-100 file:py-2 file:px-4 file:border file:rounded-lg file:transition-colors file:duration-300 file:hover:cursor-pointer"
                                         type="file"
                                         formControlName="image"
-                                        accept=".mpeg , .png, .jpeg, .jpg"
+                                        accept=".png, .jpeg, .jpg"
                                         (input)="uploadFile($event)"
+                                        id="file"
                                         #file
                                     />
                                     @if (imageRequired) {
@@ -88,7 +91,7 @@
                                     }
                                 </div>
                             </div>
-                            <div class="w-1/2">
+                            <div class="w-full 2xl:w-1/2 justify-center 2xl:justify-[unset] h-32 2xl:h-[unset]">
                                 <div class="border border-slate-300 rounded-lg h-full w-3/4 mx-auto relative">
                                     @if (fileImage()) {
                                         <img class="absolute object-contain rounded-lg top-0 left-0 w-full h-full" [src]="fileImage()" >
@@ -99,7 +102,7 @@
                         <div class="relative shrink-0">
                             <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3" 
                                 type="text" formControlName="place" id="place" autocomplete="new-password" #place>
-                            <label class="label" [ngClass]="place.value.trim() != '' ? 'float-label' : ''">Place<span class="ps-[2px]" [ngClass]="[placeRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                            <label class="label" for="place" [ngClass]="place.value.trim() != '' ? 'float-label' : ''">Place<span class="ps-[2px]" [ngClass]="[placeRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
                             @if (placeRequired) {
                                 <div
                                     class="form-error-msg"
@@ -111,7 +114,7 @@
                         <div class="relative shrink-0">
                             <textarea class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 resize-none h-36" 
                                 formControlName="description" id="description" autocomplete="new-password" #description></textarea>
-                            <label class="top-6 label" [ngClass]="description.value.trim() != '' ? 'float-label' : ''">Description<span class="ps-[2px]" [ngClass]="[desRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                            <label class="top-6 label" for="description" [ngClass]="description.value.trim() != '' ? 'float-label' : ''">Description<span class="ps-[2px]" [ngClass]="[desRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
                             @if (desRequired) {
                                 <div
                                     class="form-error-msg"
@@ -123,7 +126,7 @@
                         <div class="relative shrink-0">
                             <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3" 
                                 type="date" formControlName="date" id="date" autocomplete="new-password" #date>
-                            <label class="label float-label">Date<span class="ps-[2px]" [ngClass]="[dateRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                            <label class="label float-label" for="date" >Date<span class="ps-[2px]" [ngClass]="[dateRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
                             @if (dateRequired) {
                                 <div
                                     class="form-error-msg"
@@ -145,9 +148,15 @@
                             }
                         </div> -->
                     </form>
-                    <div class="p-5 text-right">
-                        <button [disabled]="!eventForm().valid || (formSubmit() | async)" class="py-2 px-4 w-24 border border-slate-400 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-lg leading-none hover:disabled:cursor-not-allowed disabled:opacity-65" (click)="submit()" >
-                            @if (formSubmit() | async) {
+                    <div class="p-5 text-right flex justify-end gap-5">
+                        <button
+                        class="py-2 px-4 w-24 border border-slate-400 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-lg leading-none hover:disabled:cursor-not-allowed disabled:opacity-65"
+                        (click)="resetForm()"
+                        >
+                            Reset
+                        </button>
+                        <button [disabled]="!eventForm().valid || (formSubmit$() | async)" class="py-2 px-4 w-24 border border-slate-400 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-lg leading-none hover:disabled:cursor-not-allowed disabled:opacity-65" (click)="submit()" >
+                            @if (formSubmit$() | async) {
                                 <mat-spinner diameter="18" class="mx-auto" ></mat-spinner>
                             } @else {
                                 Save
@@ -159,4 +168,17 @@
           </div>
       </div>
   }
+  @if (eventLoading$() | async) {
+        <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-25 z-20">
+            <mat-spinner diameter="50" class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2" ></mat-spinner>
+        </div>
+  } @else {
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            @for (event of (eventData$() | async); track $index) {
+                @let id = (eventIds$() | async)![$index];
+                <app-event-card [event]="event" [eventId]="id" (deleteEvent)="deleteEvent($event)" (editEvent)="editEvent($event)" />
+            }
+        </div>
+  }
+  <!-- <iframe src="https://demoreel.com/jenna-macari" height="500" width="500" ></iframe> -->
 </div>

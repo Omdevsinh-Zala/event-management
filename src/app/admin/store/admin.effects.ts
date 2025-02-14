@@ -7,8 +7,10 @@ import { EventService } from "../../services/event.service";
 import { MessageService } from "../../services/message.service";
 import { FirebaseError } from "@angular/fire/app";
 import { HttpErrorResponse } from "@angular/common/http";
+import { LocalstorageService } from "../../services/localstorage.service";
 
 export class AdminEffects {
+    //To open event form model
     openModel$ = createEffect((actions$ = inject(Actions)) => {
         return actions$.pipe(
             ofType(adminActions.openModel),
@@ -17,12 +19,15 @@ export class AdminEffects {
         )
     });
 
-    submitData$ = createEffect((actions$ = inject(Actions), service = inject(EventService), messageService = inject(MessageService)) => {
+    //To submit event form model data
+    submitData$ = createEffect((actions$ = inject(Actions), service = inject(EventService), messageService = inject(MessageService), localStorage = inject(LocalstorageService)) => {
         return actions$.pipe(
             ofType(adminActions.submitData),
             switchMap((value) => {
                 return service.addEvent(value.data).pipe(
                     map(() => {
+                        localStorage.removeItem('ImageName');
+                        localStorage.removeItem('EventDetails');
                         messageService.success('Event added successfully!')
                         return adminActions.closeModel();
                     }),
@@ -30,10 +35,10 @@ export class AdminEffects {
                         console.log(err)
                         if(err instanceof HttpErrorResponse) {
                             messageService.error(err.statusText);
-                            return of(adminActions.success());
+                            return of(adminActions.error());
                         } else {
                             messageService.error(err.code.split('/')[1]);
-                            return of(adminActions.success());
+                            return of(adminActions.error());
                         }
                     })
                 )
@@ -41,6 +46,7 @@ export class AdminEffects {
         )
     });
 
+    //To close event form model data
     closeModel$ = createEffect((actions$ = inject(Actions)) => {
         return actions$.pipe(
             ofType(adminActions.closeModel),
@@ -48,4 +54,40 @@ export class AdminEffects {
             map(() => adminActions.closeModuleCall())
         )
     });
+
+    //To get events data
+    getEventData$ = createEffect((actions$ = inject(Actions), service = inject(EventService), message = inject(MessageService)) => {
+        return actions$.pipe(
+            ofType(adminActions.getEventData),
+            switchMap(() => {
+                return service.getEventData().pipe(
+                    delay(1),
+                    map((data) => {
+                        if(data) {
+                            const eventData = Object.values(data!);
+                            const eventIds = Object.keys(data!)
+                            return adminActions.sucessEventData({ data: eventData, ids: eventIds })
+                        } else {
+                            return adminActions.sucessEventData({ data: [], ids: [] })
+                        }
+                    }),
+                    catchError((err:FirebaseError) => {
+                        message.error(err.code.split('/')[1]);
+                        return of(adminActions.errorEventData());
+                    })
+                )
+            })
+        )
+    })
+
+    //To get events form data after refresh
+    initiateEventData$ = createEffect((actions$ = inject(Actions), localStorage = inject(LocalstorageService), message = inject(MessageService)) => {
+        return actions$.pipe(
+            ofType(adminActions.initiateEventFormData),
+            map(() => {
+                const data = JSON.parse(localStorage.getItem('EventDetails') || '[]');
+                return adminActions.getEventFormData({ data: data });
+            })
+        )
+    })
 }
