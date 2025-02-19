@@ -2,7 +2,6 @@ import { inject } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { adminActions } from "./admin.actions";
 import { catchError, delay, map, of, switchMap } from "rxjs";
-import { Store } from "@ngrx/store";
 import { EventService } from "../../services/event.service";
 import { MessageService } from "../../services/message.service";
 import { FirebaseError } from "@angular/fire/app";
@@ -16,6 +15,15 @@ export class AdminEffects {
             ofType(adminActions.openModel),
             delay(100),
             map(() => adminActions.opneModuleCall())
+        )
+    });
+
+    //To open update event form model
+    openUpdateModel$ = createEffect((actions$ = inject(Actions)) => {
+        return actions$.pipe(
+            ofType(adminActions.openUpdateEvent),
+            delay(100),
+            map(() => adminActions.opneUpdateModuleCall())
         )
     });
 
@@ -46,12 +54,41 @@ export class AdminEffects {
         )
     });
 
+    //Update event form
+    updateEVentData$ = createEffect((action$ = inject(Actions), message = inject(MessageService), service = inject(EventService)) => {
+        return action$.pipe(
+            ofType(adminActions.updateData),
+            switchMap((value) => {
+                return service.updateData(value.id, value.eventData).pipe(
+                    delay(200),
+                    map(() => {
+                        message.success('Data updated succesfully')
+                        return adminActions.closeUpdateEvent();
+                    }),
+                    catchError((err:FirebaseError) => {
+                        message.error(err.code.split('/')[1]);
+                        return of(adminActions.error());
+                    })
+                )
+            })
+        )
+    })
+
     //To close event form model data
     closeModel$ = createEffect((actions$ = inject(Actions)) => {
         return actions$.pipe(
             ofType(adminActions.closeModel),
             delay(200),
             map(() => adminActions.closeModuleCall())
+        )
+    });
+
+    //To close update event form model data
+    closeUpdateModel$ = createEffect((actions$ = inject(Actions)) => {
+        return actions$.pipe(
+            ofType(adminActions.closeUpdateEvent),
+            delay(200),
+            map(() => adminActions.closeUpdateModuleCall())
         )
     });
 
@@ -78,7 +115,7 @@ export class AdminEffects {
                 )
             })
         )
-    })
+    });
 
     //To get events form data after refresh
     initiateEventData$ = createEffect((actions$ = inject(Actions), localStorage = inject(LocalstorageService), message = inject(MessageService)) => {
@@ -87,6 +124,20 @@ export class AdminEffects {
             map(() => {
                 const data = JSON.parse(localStorage.getItem('EventDetails') || '[]');
                 return adminActions.getEventFormData({ data: data });
+            })
+        )
+    });
+
+    //To remove event
+    removeEvent$ = createEffect((action$ = inject(Actions), message = inject(MessageService), service = inject(EventService)) => {
+        return action$.pipe(
+            ofType(adminActions.removeEvent),
+            switchMap((value) => {
+                return service.removeEventData(value.id).pipe(
+                    delay(300),
+                    map(() => adminActions.eventRemoveSuccess()),
+                    catchError((err:FirebaseError) => of(adminActions.eventRemoveError()))
+                )
             })
         )
     })

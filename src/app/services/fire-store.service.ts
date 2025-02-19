@@ -1,5 +1,5 @@
-import { inject, Injectable } from '@angular/core';
-import { doc, getDoc, getFirestore, setDoc } from '@angular/fire/firestore';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { doc, DocumentData, getDoc, getFirestore, setDoc } from '@angular/fire/firestore';
 import { fireStoreUser } from '../forms/module';
 import { MessageService } from './message.service';
 import { LoginService } from './login.service';
@@ -12,6 +12,7 @@ export class FireStoreService {
   private userPath = 'users'
   private messageService = inject(MessageService);
   private loginService = inject(LoginService);
+  loggedUser: WritableSignal<DocumentData | null> = signal(null);
 
   async addUser(data: fireStoreUser, id: string) {
     try {
@@ -28,6 +29,7 @@ export class FireStoreService {
     const userCollection = doc(this.fireStore, this.userPath , id);
     const data = await getDoc(userCollection)
     if(data.exists()) {
+      this.loggedUser.set(data.data())
       return { ...data.data() };
     } else {
       return null
