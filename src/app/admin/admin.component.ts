@@ -1,15 +1,14 @@
-import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, inject, OnInit, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
-import { selectEventData, selectEventLoading, selectEventsData, selectEventsIdData, selectLoading, selectModelCall, selectModelState, selectModuleLoading } from './store/admin.reducer';
+import { selectEventData, selectEventId, selectEventLoading, selectEventsData, selectEventsIdData, selectLoading, selectModelCall, selectModelState, selectModuleLoading, selectUpdateModelCall, selectUpdateModelState, selectUpdateModuleLoading } from './store/admin.reducer';
 import { adminActions } from './store/admin.actions';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EventData } from './module';
 import { MessageService } from '../services/message.service';
 import { LocalstorageService } from '../services/localstorage.service';
-import { title } from 'process';
 import { EventCardComponent } from '../event-card/event-card.component';
 
 @Component({
@@ -31,12 +30,17 @@ export class AdminComponent implements OnInit {
   private fb = inject(FormBuilder);
   private message = inject(MessageService);
   searchEvent = signal('');
+  //For event form
   showModel$ = signal(this.store.select(selectModelCall));
   showaddEventModel$ = signal(this.store.select(selectModelState));
+  modelOpen$ = signal(this.store.select(selectModuleLoading));
+  //For update event form
+  showUpdateModel$ = signal(this.store.select(selectUpdateModelCall));
+  showUpdateEventModel$ = signal(this.store.select(selectUpdateModelState));
+  updateModelOpen$ = signal(this.store.select(selectUpdateModuleLoading));
   model = signal(false);
   fileName = signal('');
   fileImage = signal('');
-  modelOpen$ = signal(this.store.select(selectModuleLoading));
   eventFormData$ = signal(this.store.select(selectEventData));
   imageFile:WritableSignal<File | null> = signal(null);
   formSubmit$ = signal(this.store.select(selectLoading));
@@ -58,6 +62,14 @@ export class AdminComponent implements OnInit {
   //To use local storage
   localStorage = inject(LocalstorageService);
 
+  //eventIdFor updating/deleting
+  eventId$ = this.store.select(selectEventId);
+
+  todayDate = new Date().toISOString().split("T")[0];
+
+  isFuterEvent(date: string):boolean {
+    return new Date(date).getTime() > new Date().getTime();
+  }
   ngOnInit(): void {
     //To get events data
     this.store.dispatch(adminActions.getEventData());
@@ -65,7 +77,7 @@ export class AdminComponent implements OnInit {
 
   toggleModel() {
     //To get event data if avaiable
-    this.handleEventForm();
+    // this.handleEventForm();
     //To listen and store event data in local storage
     this.eventForm().valueChanges.subscribe({
       next:(value) => {
@@ -126,14 +138,26 @@ export class AdminComponent implements OnInit {
 
   //Event form
   eventForm: Signal<FormGroup> = computed(() => 
-    this.fb.group(({
+    this.fb.group({
       title: ['',[Validators.required]],
       image: ['',[Validators.required]],
       place: ['',[Validators.required]],
       description: ['',[Validators.required]],
       date: ['',[Validators.required]],
       // participants: [[''],[]]
-    }))
+    })
+  );
+
+  //update-event form
+  updateEventForm: Signal<FormGroup> = computed(() => 
+    this.fb.group({
+      title: ['',[Validators.required]],
+      image: ['',[Validators.required]],
+      place: ['',[Validators.required]],
+      description: ['',[Validators.required]],
+      date: ['',[Validators.required]],
+      // participants: [[''],[]]
+    })
   );
 
   //Input image file to html and store it.
@@ -256,10 +280,48 @@ export class AdminComponent implements OnInit {
 
   //To delete event
   deleteEvent(id: string) {
-    console.log(id);
+    this.store.dispatch(adminActions.removeEvent({ id: id }));
+  }
+
+  openUpdateEventForm(id: string, data: EventData) {
+    this.store.dispatch(adminActions.openUpdateEvent({id: id}))
+    this.updateEventForm().setValue({
+      title: data.title,
+      image: '',
+      place: data.place,
+      description: data.description,
+      date: data.date,
+      // participants: [[''],[]]
+    });
+    const file = this.base64ToFile(data.image, 'Event Image');
+    this.imageFile.update(() => file);
+    this.fileName.update(() => 'Event Image');
+    this.fileImage.update(() => URL.createObjectURL(file!));
+    this.base64ImageData.set(data.image);
+    this.updateEventForm().get('image')?.removeValidators(Validators.required);
+    this.updateEventForm().markAsTouched();
+    this.updateEventForm().updateValueAndValidity();
+}
+
+  closeUpdateEventForm() {
+    this.store.dispatch(adminActions.closeUpdateEvent());
   }
 
   editEvent(id: string) {
-    console.log(id);
+    this.store.dispatch(adminActions.processData());
+    const data: EventData = {
+      title: this.updateEventForm().get('title')!.value,
+      image: this.base64ImageData() as string,
+      place: this.updateEventForm().get('place')!.value,
+      description: this.updateEventForm().get('description')!.value,
+      date: this.updateEventForm().get('date')!.value,
+      participants:this.participants()
+    };
+    this.store.dispatch(adminActions.updateData({ id: id, eventData: data }));
+  }
+
+  resetUpdateEventForm() {
+    this.clearUpload();
+    this.updateEventForm().reset();
   }
 }

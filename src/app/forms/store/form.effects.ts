@@ -82,7 +82,11 @@ export class FormsEfects {
                 return from(fireStoreService.getUsers(authService.getuid())).pipe(
                     map((data) => {
                         if(data) {
-                            router.navigateByUrl('/home');
+                            if(fireStoreService.loggedUser()!['role'] === 'admin') {
+                                router.navigateByUrl('/admin');
+                            } else {
+                                router.navigateByUrl('/home');
+                            }
                             message.success('Login Successfull');
                             return formActions.success({ message: 'Login Successfull' });
                         } else {

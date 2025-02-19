@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { EventData } from '../admin/module';
-import { getDatabase, onValue, query, ref } from '@angular/fire/database';
-import { ReplaySubject } from 'rxjs';
+import { getDatabase, onValue, query, ref, remove } from '@angular/fire/database';
+import { from, ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +25,17 @@ export class EventService {
   }
 
   getEventData() {
-    // return this.http.get<{ key: string,  }>(this.database + '/' +this.path + '.json');
     const databaseRef = ref(this.db, this.path);
     const newRef = query(databaseRef);
     onValue(newRef, (snapshot) => {
       this.eventsData.next(snapshot.val());
     })
     return this.eventsData$
+  }
+
+  removeEventData(id: string) {
+    const pathRef = this.path + `/${id}`;
+    const dataRef = ref(this.db, pathRef);
+    return from(remove(dataRef));
   }
 }

@@ -1,8 +1,10 @@
 @if (typeof event() !== 'undefined') {
-    <div class="group relative border-slate-200 rounded-lg p-2 shadow-lg h-full hover:shadow-xl flex flex-col gap-3 transition-shadow duration-300 hover:cursor-pointer selection:select-none border overflow-hidden focus:shadow-xl" tabindex="0" (click)="$event.target === $event.currentTarget && divRef.focus()" #divRef>
+    <div class="group relative border-slate-200 rounded-lg p-2 shadow-lg h-full hover:shadow-sky-200 hover:shadow-xl flex flex-col gap-3 transition-shadow duration-300 hover:cursor-pointer selection:select-none border overflow-hidden focus:shadow-xl" tabindex="0" [ngClass]="isFuterEvent(event()!.date) ? '' : 'bg-red-100 !border-red-200 hover:!shadow-rose-200'" (click)="$event.target === $event.currentTarget && divRef.focus()" #divRef>
         <div class="absolute flex items-center gap-3 -top-6 opacity-0 group-hover:opacity-100 group-hover:top-2 transition-all duration-300 right-2 group-focus:opacity-100 group-focus:top-2">
-            <button class="rounded-xl border flex justify-center items-center leading-none bg-blue-50 hover:bg-blue-100 border-blue-400 sm:p-2 p-1 transition-colors duration-300" (click)="editEvent.emit(eventId()!)"><mat-icon class="text-blue-400" >edit</mat-icon></button>
-            <button class="rounded-xl border flex justify-center items-center leading-none bg-rose-50 hover:bg-rose-100 border-rose-400 sm:p-2 p-1 transition-colors duration-300" (click)="deleteEvent.emit(eventId()!)"><mat-icon class="text-rose-400" >delete</mat-icon></button>
+            @if (isFuterEvent(event()!.date)) {
+                <button class="rounded-xl border flex justify-center items-center leading-none bg-blue-50 hover:bg-blue-100 border-blue-400 sm:p-2 p-1 transition-colors duration-300" [disabled]="targetId == eventId" (click)="editEvent.emit(eventId()!)"><mat-icon class="text-blue-400" >edit</mat-icon></button>
+            }
+            <button class="rounded-xl border flex justify-center items-center leading-none bg-rose-50 hover:bg-rose-100 border-rose-400 sm:p-2 p-1 transition-colors duration-300" [disabled]="targetId == eventId" (click)="deleteEvent.emit(eventId()!)"><mat-icon class="text-rose-400" >delete</mat-icon></button>
         </div>
         <h3 class="text-2xl">{{ event()!.title }}</h3>
         <div class="relative w-full overflow-hidden pb-72">

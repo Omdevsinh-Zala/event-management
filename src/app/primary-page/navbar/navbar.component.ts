@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { LoginService } from '../../services/login.service';
+import { FireStoreService } from '../../services/fire-store.service';
 
 @Component({
   selector: 'app-navbar',
@@ -30,9 +31,11 @@ export class NavbarComponent {
   ]);
   service = inject(AuthService);
   userState$ = this.service.getAuthState();
-  loginService = inject(LoginService);
+  private readonly loginService = inject(LoginService);
+  private readonly fireStore = inject(FireStoreService);
   navbarToggle = signal(false);
   signOut() {
+    this.fireStore.loggedUser.set(null);
     this.loginService.singOut();
   }
 }
