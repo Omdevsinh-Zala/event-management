@@ -18,6 +18,8 @@ export class FireStoreService {
     try {
       const userCollection = doc(this.fireStore, this.userPath , id);
       await setDoc(userCollection, data);
+      const userData = await getDoc(userCollection);
+      return {...userData.data()};
     } catch(error: any) {
       this.messageService.error(error.code);
       this.loginService.deleteUser()

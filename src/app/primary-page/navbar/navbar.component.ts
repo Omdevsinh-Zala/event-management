@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { LoginService } from '../../services/login.service';
 import { FireStoreService } from '../../services/fire-store.service';
+import { LocalstorageService } from '../../services/localstorage.service';
 
 @Component({
   selector: 'app-navbar',
@@ -33,9 +34,11 @@ export class NavbarComponent {
   userState$ = this.service.getAuthState();
   private readonly loginService = inject(LoginService);
   private readonly fireStore = inject(FireStoreService);
+  private localStorage = inject(LocalstorageService);
   navbarToggle = signal(false);
   signOut() {
     this.fireStore.loggedUser.set(null);
+    this.localStorage.removeItem('user');
     this.loginService.singOut();
   }
 }

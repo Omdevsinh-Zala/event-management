@@ -1,17 +1,22 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
     {
         path: 'login',
-        loadComponent:() => import('./forms/login/login.component').then((m) => m.LoginComponent)  
+        loadComponent:() => import('./forms/login/login.component').then((m) => m.LoginComponent),
+        canActivate: [authGuard]
     },
     {
         path: 'register',
-        loadComponent:() => import('./forms/register/register.component').then((m) => m.RegisterComponent)  
+        loadComponent:() => import('./forms/register/register.component').then((m) => m.RegisterComponent),
+        canActivate: [authGuard]
     },
     {
         path: 'admin',
-        loadComponent:() => import('./admin/admin.component').then((m) => m.AdminComponent)  
+        loadComponent:() => import('./admin/admin.component').then((m) => m.AdminComponent),
+        canActivate: [adminGuard]
     },
     {
         path: '',

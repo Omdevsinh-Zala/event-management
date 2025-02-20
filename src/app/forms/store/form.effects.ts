@@ -9,6 +9,7 @@ import { MessageService } from "../../services/message.service";
 import { FireStoreService } from "../../services/fire-store.service";
 import { fireStoreUser } from "../module";
 import { AuthService } from "../../services/auth.service";
+import { LocalstorageService } from "../../services/localstorage.service";
 
 @Injectable()
 export class FormsEfects {
@@ -36,13 +37,19 @@ export class FormsEfects {
     })
 
     //For fireStore register
-    registerWithFireStore$ = createEffect((actions$ = inject(Actions), fireStoreService = inject(FireStoreService), router = inject(Router), message = inject(MessageService)) => {
+    registerWithFireStore$ = createEffect((actions$ = inject(Actions), fireStoreService = inject(FireStoreService), router = inject(Router), message = inject(MessageService), localStorage = inject(LocalstorageService)) => {
         return actions$.pipe(
             ofType(formActions.registerUserWithFirstore),
             switchMap(( value ) => {
                 return from(fireStoreService.addUser(value.data, value.data.uid)).pipe(
                     delay(1000),
-                    map(() => {
+                    map((data) => {
+                        if(data) {
+                            const userData = {
+                                role: data['role']
+                            }
+                            localStorage.setItem('user', JSON.stringify(userData));
+                        }
                         router.navigateByUrl('/home');
                         message.success('Registration Successfull');
                         return formActions.success({ message: 'Registration Successfull' });
@@ -83,9 +90,18 @@ export class FormsEfects {
                     map((data) => {
                         if(data) {
                             if(fireStoreService.loggedUser()!['role'] === 'admin') {
+                                const userData = {
+                                    email: data['email'],
+                                    role: data['role'],
+                                }
                                 router.navigateByUrl('/admin');
+                                localStorage.setItem('user', JSON.stringify(userData));
                             } else {
+                                const userData = {
+                                    role: data['role']
+                                }
                                 router.navigateByUrl('/home');
+                                localStorage.setItem('user', JSON.stringify(userData));
                             }
                             message.success('Login Successfull');
                             return formActions.success({ message: 'Login Successfull' });
