@@ -40,7 +40,6 @@ export class AdminEffects {
                         return adminActions.closeModel();
                     }),
                     catchError((err) => {
-                        console.log(err)
                         if(err instanceof HttpErrorResponse) {
                             messageService.error(err.statusText);
                             return of(adminActions.error());

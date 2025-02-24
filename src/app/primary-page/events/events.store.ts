@@ -74,7 +74,6 @@ export class EventsStore extends ComponentStore<InitialState> {
         return data$.pipe(
             tap((data) => {
                 this.setRegisterEventId(data.id)
-                console.log(this.state().registerEventId)
                 this.setRegisterEventLoading(true)
             }),
             delay(500),
