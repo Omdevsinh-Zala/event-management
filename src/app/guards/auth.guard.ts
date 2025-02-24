@@ -6,7 +6,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const localStorage = inject(LocalstorageService);
   const localData: any = JSON.parse(localStorage.getItem('user') || '[]') || '';
-  console.log(localData)
   const path = route.url[0].path || '';
 
   if (path === 'login' || path === 'register') {
