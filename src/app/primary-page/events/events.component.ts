@@ -25,6 +25,8 @@ export class EventsComponent implements OnInit {
   ngOnInit(): void {
     this.store.getEventData();
   }
+
+  //To check event date with current date
   isFuterEvent(date: string):boolean {
     this.today.setHours(0,0,0,0);
     return new Date(date).getTime() >= this.today.getTime();
