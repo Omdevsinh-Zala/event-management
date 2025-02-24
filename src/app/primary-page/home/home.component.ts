@@ -42,6 +42,10 @@ export class HomeComponent implements OnInit {
     return;
   }
 
+  isUser() {
+    return this.auth.getAuthState()
+  }
+
   unRegisterUser(data:EventData, id: string) {
     let newData: EventData;
     const updatedParticipants = data.participants.filter((uid) => uid !== this.auth.getuid());
