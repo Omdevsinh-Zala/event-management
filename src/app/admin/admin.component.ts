@@ -44,6 +44,7 @@ export class AdminComponent implements OnInit {
   eventFormData$ = signal(this.store.select(selectEventData));
   imageFile:WritableSignal<File | null> = signal(null);
   formSubmit$ = signal(this.store.select(selectLoading));
+  space = signal(500)
 
   //File input html tag refrence
   @ViewChild('file') file !: ElementRef<HTMLInputElement>;
@@ -73,6 +74,20 @@ export class AdminComponent implements OnInit {
   ngOnInit(): void {
     //To get events data
     this.store.dispatch(adminActions.getEventData());
+    window.addEventListener('load', () => {
+      if(matchMedia('(max-width: 768px)').matches) {
+        this.space.update(() => 300);
+      } else {
+        this.space.update(() => 500);
+      }
+    })
+    window.addEventListener('resize', () => {
+      if(matchMedia('(max-width: 768px)').matches) {
+        this.space.update(() => 300);
+      } else {
+        this.space.update(() => 500);
+      }
+    })
   }
 
   toggleModel() {
@@ -233,7 +248,7 @@ export class AdminComponent implements OnInit {
     if(!(validTypes.includes(data.type))) {
       setTimeout(() => {
         this.message.error('Invalid image format');
-        // this.clearUpload();
+        this.clearUpload();
         this.store.dispatch(adminActions.error());
       },500);
       return null;
@@ -242,7 +257,7 @@ export class AdminComponent implements OnInit {
       const file = data
       if(!file) {
         this.message.error('Invalid image');
-        // this.clearUpload();
+        this.clearUpload();
         resolve(null);
         return;
       }
@@ -257,7 +272,7 @@ export class AdminComponent implements OnInit {
       };
       reader.onerror = (error) => {
         this.message.error('Invalid image');
-        // this.clearUpload();
+        this.clearUpload();
         return reject(null)
       }
     })
