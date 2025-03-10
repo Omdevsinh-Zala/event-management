@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { doc, DocumentData, getDoc, getFirestore, setDoc } from '@angular/fire/firestore';
+import { doc, DocumentData, Firestore, getDoc, getFirestore, setDoc } from '@angular/fire/firestore';
 import { fireStoreUser } from '../forms/module';
 import { MessageService } from './message.service';
 import { LoginService } from './login.service';
@@ -8,11 +8,15 @@ import { LoginService } from './login.service';
   providedIn: 'root'
 })
 export class FireStoreService {
-  private fireStore = getFirestore()
+  private fireStore !:Firestore;
   private userPath = 'users'
   private messageService = inject(MessageService);
   private loginService = inject(LoginService);
   loggedUser: WritableSignal<DocumentData | null> = signal(null);
+
+  constructor() {
+    this.fireStore = getFirestore();
+  }
 
   async addUser(data: fireStoreUser, id: string) {
     try {

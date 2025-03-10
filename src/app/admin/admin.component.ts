@@ -202,7 +202,11 @@ export class AdminComponent implements OnInit {
   async submit() {
     this.store.dispatch(adminActions.processData());
     if(typeof(this.base64ImageData()) != 'string') {
-      return;
+      setTimeout(() => {
+        this.message.error('Invalid data formate');
+        this.store.dispatch(adminActions.error());
+        return;
+      }, 500)
     }
     setTimeout(() => {
       const data: EventData = {
@@ -229,6 +233,7 @@ export class AdminComponent implements OnInit {
     if(!(validTypes.includes(data.type))) {
       setTimeout(() => {
         this.message.error('Invalid image format');
+        // this.clearUpload();
         this.store.dispatch(adminActions.error());
       },500);
       return null;
@@ -237,10 +242,11 @@ export class AdminComponent implements OnInit {
       const file = data
       if(!file) {
         this.message.error('Invalid image');
+        // this.clearUpload();
         resolve(null);
         return;
       }
-
+      
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
@@ -251,6 +257,7 @@ export class AdminComponent implements OnInit {
       };
       reader.onerror = (error) => {
         this.message.error('Invalid image');
+        // this.clearUpload();
         return reject(null)
       }
     })

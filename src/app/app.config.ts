@@ -73,7 +73,6 @@ export const appConfig: ApplicationConfig = {
     provideRemoteConfig(() => getRemoteConfig()),
     provideVertexAI(() => getVertexAI()),
     provideAnimationsAsync(),
-    provideAnimationsAsync(),
     provideStore(),
     provideState(FormKey, FormReducer),
     provideState(adminKey, adminReducer),
