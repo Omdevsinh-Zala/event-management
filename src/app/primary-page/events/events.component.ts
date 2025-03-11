@@ -18,7 +18,7 @@ export class EventsComponent implements OnInit {
   private store = inject(EventsStore);
   today = new Date();
   loading$ = this.store.loading$;
-  eventsData$ = this.store.eventData$;
+  eventsData$ = this.store.eventsData$;
   eventsId$ = this.store.eventsIds$;
   registerEventId$ = this.store.registerEventId$;
   registerEventLoading$ = this.store.registerEventLoading$;

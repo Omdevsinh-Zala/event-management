@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { doc, DocumentData, Firestore, getDoc, getFirestore, setDoc } from '@angular/fire/firestore';
+import { doc, DocumentData, Firestore, getDoc, getFirestore, setDoc, updateDoc } from '@angular/fire/firestore';
 import { fireStoreUser } from '../forms/module';
 import { MessageService } from './message.service';
 import { LoginService } from './login.service';
@@ -52,5 +52,29 @@ export class FireStoreService {
         this.loggedUser.set(null);
       }
     }
+  }
+
+  async addEventData(id: string, eventId: string) {
+    const userCollection = doc(this.fireStore, this.userPath, id);
+    const userData = await getDoc(userCollection);
+    const user = { ...userData.data() };
+    let data;
+    if(user['events']) {
+      const array = user['events'];
+      array.push(eventId)
+      data = { events: array };
+    } else {
+      data = { events: [eventId] }
+    }
+    return await updateDoc(userCollection, data);
+  }
+
+  async removeEventData(id: string, eventId: string) {
+    const userCollection = doc(this.fireStore, this.userPath, id);
+    const userData = await getDoc(userCollection);
+    const user = { ...userData.data() };
+    let data = user['events'].filter((uid: string) => uid !== eventId);
+
+    await updateDoc(userCollection, data);
   }
 }
