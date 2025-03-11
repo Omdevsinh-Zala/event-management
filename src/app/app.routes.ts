@@ -14,11 +14,6 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
-        path: 'admin',
-        loadComponent:() => import('./admin/admin.component').then((m) => m.AdminComponent),
-        canActivate: [adminGuard]
-    },
-    {
         path: '',
         loadComponent: () => import('./primary-page/primary-page.component').then((m) => m.PrimaryPageComponent),
         children:[
@@ -29,6 +24,11 @@ export const routes: Routes = [
             {
                 path: 'events',
                 loadComponent: () => import('./primary-page/events/events.component').then((m) => m.EventsComponent)
+            },
+            {
+                path: 'admin',
+                loadComponent:() => import('./admin/admin.component').then((m) => m.AdminComponent),
+                canActivate: [adminGuard]
             },
         ]
     },
