@@ -76,14 +76,14 @@ export class AdminComponent implements OnInit {
     this.store.dispatch(adminActions.getEventData());
     window.addEventListener('load', () => {
       if(matchMedia('(max-width: 768px)').matches) {
-        this.space.update(() => 300);
+        this.space.update(() => 350);
       } else {
         this.space.update(() => 500);
       }
     })
     window.addEventListener('resize', () => {
       if(matchMedia('(max-width: 768px)').matches) {
-        this.space.update(() => 300);
+        this.space.update(() => 350);
       } else {
         this.space.update(() => 500);
       }
