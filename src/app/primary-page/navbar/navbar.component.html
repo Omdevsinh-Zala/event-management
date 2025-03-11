@@ -1,0 +1,49 @@
+<div class="px-2 sm:px-0">
+    <header>
+        <div class="container flex justify-between items-center py-3 mx-auto relative   ">
+            <div class="invisible"></div>
+            <div class="absolute transition-all duration-500 flex justify-between w-full md:w-[56%] z-10 items-center top-[66px] md:static bottom-2 md:visible mobile-nav md:opacity-100 md:!h-auto md:flex-row flex-col md:py-0 lg:bg-transparent bg-white" [ngClass]="navbarToggle() ? 'flex-col visible left-0 opacity-100 py-3' : 'invisible -left-full opacity-0'" >
+                <div>
+                    <nav>
+                        <ul class="flex justify-end items-center">
+                            @for (nav of navlinks(); track $index) {   
+                                <li class="border-x border-slate-300 px-2" (click)="navbarToggle.set(false)" [ngClass]="[$first ? 'border-s-0' : '', $last ? 'border-e-0' : '']" >
+                                    <a class="transition-colors duration-300 rounded-md px-4 py-2 hover:bg-slate-100" [routerLink]="nav.path" routerLinkActive="bg-slate-100" >{{ nav.link }}</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+                <div class="flex items-center">
+                    @if (!(userState$ | async)) {
+                        <a class="group/login relative flex items-center gap-1 hover:cursor-pointer" routerLink="/login">
+                            <mat-icon>account_circle</mat-icon>
+                            <h2>Login</h2>
+                            <mat-icon class="transition-transform duration-300 group-hover/login:-rotate-45" >
+                                arrow_right_alt
+                            </mat-icon>
+                        </a>
+                    } @else {
+                        <div class="group/singOut relative flex items-center gap-1 hover:cursor-pointer">
+                            <h2>{{ (userState$ | async)?.displayName }}</h2>
+                            <div class="transition-all duration-300 opacity-0 w-max bg-slate-100 px-3 py-1 absolute invisible flex items-center gap-1 group-hover/singOut:visible group-hover/singOut:opacity-100 hover:visible hover:opacity-100 md:-bottom-9 md:-left-7 border border-slate-300 rounded-lg" [ngClass]="navbarToggle() ? 'left-14' : ''">
+                                <mat-icon class="md:-rotate-90 absolute md:-top-4 md:left-1/2 md:-translate-x-1/2 md:translate-y-0 text-slate-100 stroke-slate-300" [ngClass]="navbarToggle() ? '-rotate-180 -left-4 top-1/2 -translate-y-1/2' : ''">
+                                    play_arrow
+                                </mat-icon>
+                                <h3 (click)="signOut()">Sign out</h3>
+                                <mat-icon class="-rotate-45" >
+                                    arrow_right_alt
+                                </mat-icon>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="block md:hidden">                                                                                                        
+                <button class="bg-transparent border border-slate-300 rounded-md p-2 h-[42px]" (click)="navbarToggle.set(!navbarToggle())" >
+                    <mat-icon>menu</mat-icon>
+                </button>
+            </div>
+        </div>
+    </header>
+</div>
