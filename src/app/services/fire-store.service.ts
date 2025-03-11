@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { doc, DocumentData, Firestore, getDoc, getFirestore, setDoc, updateDoc } from '@angular/fire/firestore';
+import { collection, collectionData, doc, DocumentData, Firestore, getDoc, getFirestore, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { fireStoreUser } from '../forms/module';
 import { MessageService } from './message.service';
 import { LoginService } from './login.service';
@@ -78,5 +78,11 @@ export class FireStoreService {
       events: array
     }
     await updateDoc(userCollection, data);
+  }
+
+  getUserFromEvent(id: string) {
+    const userCollection = collection(this.fireStore, this.userPath);
+    const filter = query(userCollection, where('events', 'array-contains', id));
+    return collectionData(filter);
   }
 }

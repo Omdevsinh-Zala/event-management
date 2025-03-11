@@ -1,13 +1,17 @@
 import { Component, ElementRef, inject, input, OnInit, output, signal, ViewChild } from '@angular/core';
 import { EventData } from '../admin/module';
-import { CommonModule, DatePipe } from '@angular/common';
+import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { LocalstorageService } from '../services/localstorage.service';
 import { animate, query, style, transition, trigger } from '@angular/animations';
+import { FireStoreService } from '../services/fire-store.service';
+import { delay, ReplaySubject } from 'rxjs';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { DocumentData } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-event-card',
-  imports: [DatePipe, MatIconModule, CommonModule],
+  imports: [DatePipe, MatIconModule, CommonModule, AsyncPipe, MatProgressSpinner],
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.scss',
 })
@@ -25,6 +29,9 @@ export class EventCardComponent implements OnInit {
   iconPosotion = signal('0');
   popupPosition = signal<{top?: string, right?: string, bottom?: string, left?: string, transform?: string, rotate?:string}>({});
   @ViewChild('inspectBtn') inspectBtn ?:ElementRef<HTMLButtonElement>;
+  fireStore = inject(FireStoreService);
+  firstInitialize = signal(true);
+  usersData$: ReplaySubject<(DocumentData | (DocumentData & {}))[]> = new ReplaySubject();
 
   ngOnInit(): void {
     window.addEventListener('scroll', () => {
@@ -52,10 +59,14 @@ export class EventCardComponent implements OnInit {
     })
   }
   
-  toggleInspect() {
+  toggleInspect(id: string) {
     this.inspect.update((value) => {
       if(!value) {
         this.calculateOptimalPosition();
+        if(this.firstInitialize()) {
+          this.seeParticipants(id)
+          this.firstInitialize.set(false);
+        }
       }
         setTimeout(() => {
           this.inspectIn.set(!this.inspectIn());
@@ -109,5 +120,17 @@ export class EventCardComponent implements OnInit {
       // this.iconPosotion.set(`${}`)
     }
     this.popupPosition.set(position);
+  }
+
+  seeParticipants(id: string) {
+    this.fireStore.getUserFromEvent(id)
+    .pipe(
+      delay(500)
+    )
+    .subscribe({
+      next:(data) => {
+        this.usersData$.next(data);
+      }
+    })
   }
 }
