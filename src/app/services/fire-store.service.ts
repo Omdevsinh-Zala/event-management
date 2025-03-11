@@ -73,8 +73,10 @@ export class FireStoreService {
     const userCollection = doc(this.fireStore, this.userPath, id);
     const userData = await getDoc(userCollection);
     const user = { ...userData.data() };
-    let data = user['events'].filter((uid: string) => uid !== eventId);
-
+    const array = user['events'].filter((uid: string) => uid !== eventId);
+    const data = {
+      events: array
+    }
     await updateDoc(userCollection, data);
   }
 }
