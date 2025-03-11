@@ -21,7 +21,7 @@
         </p>
         <div class="flex justify-between items-center">
             <p>
-                <span class="font-semibold">participants: </span>{{ event()!.participants ? event()!.participants.length : 0 }}
+                <span class="font-semibold">Participants: </span>{{ event()!.participants ? event()!.participants.length : 0 }}
             </p>
             <button class="rounded-md border border-purple-300 bg-purple-50 hover:bg-purple-100 text-purple-500 transition-colors duration-300 px-4 py-2" (click)=" inspect() ? toggleInInspect() : toggleInspect()" #inspectBtn >
                 See participants
@@ -30,7 +30,7 @@
     </div>
     @if (inspect()) {
         <div class="fixed top-0 left-0 w-full h-full bg-transparent z-30 pointer-events-none">
-            <div class="fixed pointer-events-auto border border-purple-400 bg-white rounded-xl shadow-lg w-[300px] h-[300px] md:w-[500px] md:h-[500px] z-40 scale-0 opacity-0 transition-all duration-300"
+            <div class="fixed pointer-events-auto border border-purple-400 bg-white rounded-xl shadow-lg w-[350px] h-[350px] md:w-[500px] md:h-[500px] z-40 scale-0 opacity-0 transition-all duration-300"
             [ngStyle]="{ top : popupPosition().top, left: popupPosition().left, right: popupPosition().right, bottom: popupPosition().bottom }"
             [ngClass]="inspectIn() ? 'scale-100 opacity-100 shadow-lg' : ''"
             >
