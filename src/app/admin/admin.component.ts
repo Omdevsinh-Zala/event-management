@@ -326,6 +326,7 @@ export class AdminComponent implements OnInit {
 }
 
   closeUpdateEventForm() {
+    this.clearUpload();
     this.store.dispatch(adminActions.closeUpdateEvent());
   }
 

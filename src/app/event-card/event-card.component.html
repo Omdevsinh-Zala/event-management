@@ -23,14 +23,14 @@
             <p>
                 <span class="font-semibold">Participants: </span>{{ event()!.participants ? event()!.participants.length : 0 }}
             </p>
-            <button class="rounded-md border border-purple-300 bg-purple-50 hover:bg-purple-100 text-purple-500 transition-colors duration-300 px-4 py-2" (click)=" inspect() ? toggleInInspect() : toggleInspect()" #inspectBtn >
+            <button class="rounded-md border border-purple-300 bg-purple-50 hover:bg-purple-100 text-purple-500 transition-colors duration-300 px-4 py-2" (click)=" inspect() ? toggleInInspect() : toggleInspect(eventId()!)" #inspectBtn >
                 See participants
             </button>
         </div>
     </div>
     @if (inspect()) {
-        <div class="fixed top-0 left-0 w-full h-full bg-transparent z-30 pointer-events-none">
-            <div class="fixed pointer-events-auto border border-purple-400 bg-white rounded-xl shadow-lg w-[350px] h-[350px] md:w-[500px] md:h-[500px] z-40 scale-0 opacity-0 transition-all duration-300"
+        <div class="fixed top-0 left-0 w-full h-full bg-transparent z-20 pointer-events-none">
+            <div class="fixed pointer-events-auto border border-purple-400 bg-white rounded-xl shadow-lg w-[350px] h-[350px] md:w-[500px] md:h-[500px] z-20 scale-0 opacity-0 transition-all duration-300"
             [ngStyle]="{ top : popupPosition().top, left: popupPosition().left, right: popupPosition().right, bottom: popupPosition().bottom }"
             [ngClass]="inspectIn() ? 'scale-100 opacity-100 shadow-lg' : ''"
             >
@@ -45,20 +45,29 @@
                     play_arrow
                 </mat-icon>
             </div>
-                <div class="absolute text-slate-500 hover:text-black right-3 top-3 transition-colors duration-300">
+                <div class="absolute text-slate-500 hover:text-black right-3 top-3 transition-colors duration-300 z-10">
                     <button class="" (click)="toggleInInspect()">
                         <mat-icon>close</mat-icon>
                     </button>
                 </div>
-                <div class="p-6 max-h-full overflow-auto">
+                <div class="p-6 max-h-full overflow-auto relative">
                     <h3 class="text-xl font-semibold mb-4">Participants for {{ event()!.title }}</h3>
-                    <ul class="divide-y">
-                        @for (participant of event()!.participants; track $index) {
-                            <li class="py-2">{{ participant }}</li>
-                        } @empty {
-                            <li class="py-2 text-gray-500">No participants yet</li>
-                        }
-                    </ul>
+                    @if((usersData$ | async)! && (usersData$ | async)!.length > 0) {
+                        <ul class="divide-y">
+                            @for (participant of (usersData$ | async)!; track $index) {
+                                <li class="py-2">
+                                    <div class="flex flex-col">
+                                        <h3 class="text-md lg:text-lg capitalize" >{{ participant['email'].split('@')[0] }}</h3>
+                                        <p class="text-xs lg:text-sm opacity-80" >{{ participant['email'] }}</p>
+                                    </div>
+                                </li>
+                            } @empty {
+                                <li class="py-2 text-gray-500">No participants yet</li>
+                            }
+                        </ul>
+                    } @else {
+                        <mat-spinner diameter="20" class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2" ></mat-spinner>
+                    }
                 </div>
             </div>
         </div>
