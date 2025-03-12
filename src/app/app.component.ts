@@ -23,7 +23,6 @@ export class AppComponent {
     auth.getAuthState().subscribe({
       next:() => {
         if(isPlatformBrowser(this.platformId) && environment.production && auth.getuid()) {
-          console.log('Hello')
           this.messagingService.initializeFirebaseMessaging();
         }
       }
