@@ -33,7 +33,7 @@ export class FireMessagingService {
   async initializeFirebaseMessaging() {
     if ('serviceWorker' in navigator && this.auth.getuid()) {
       try {
-        navigator.serviceWorker.getRegistrations().then(registrations => {
+        await navigator.serviceWorker.getRegistrations().then(registrations => {
           // If there are multiple registrations, unregister all but keep the newest
           if (registrations.length > 0) {
             
@@ -45,7 +45,7 @@ export class FireMessagingService {
               (b.active?.scriptURL || '') > (a.active?.scriptURL || '') ? 1 : -1
             );
             
-            for (let i = 0; i < regArray.length; i++) {
+            for (let i = 0; i <= regArray.length; i++) {
               regArray[i].unregister();
             }
           }
