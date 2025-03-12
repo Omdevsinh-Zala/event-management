@@ -29,6 +29,34 @@ export class FireMessagingService {
     }
   }
 
+  async initializeFirebaseMessaging() {
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        console.log('Service Worker registered with scope:', registration.scope);
+        
+        // Wait until the service worker is active
+        if (registration.active) {
+          this.sendConfigToServiceWorker(registration.active);
+        } else {
+          navigator.serviceWorker.ready.then(reg => {
+            this.sendConfigToServiceWorker(reg.active!);
+          });
+        }
+      } catch (error) {
+        console.error('Service Worker registration failed:', error);
+      }
+    }
+  }
+
+  private sendConfigToServiceWorker(swRegistration: ServiceWorker) {
+    // Send Firebase configuration to service worker
+    swRegistration.postMessage({
+      type: 'INIT_FIREBASE',
+      config: environment.firebaseConfig
+    });
+  }
+
   async requestPermission() {
     if (!isPlatformBrowser(this.platformId) || !this.messaging || !environment.production) {
       console.log('Messaging not available in this environment');
