@@ -34,7 +34,7 @@ import {
   provideRemoteConfig,
 } from '@angular/fire/remote-config';
 import { getVertexAI, provideVertexAI } from '@angular/fire/vertexai';
-import { environment } from '../environments/environment';
+import { environment } from '../environments/environment.prod';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
