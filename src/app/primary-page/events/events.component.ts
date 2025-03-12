@@ -41,9 +41,8 @@ export class EventsComponent implements OnInit {
         description: data.description,
         place: data.place,
         date: data.date,
-        participants: data.participants
+        participants: [...data.participants, this.auth.getuid()]
        };
-       newData.participants.push(this.auth.getuid())
     } else {
       newData = { 
         title: data.title,

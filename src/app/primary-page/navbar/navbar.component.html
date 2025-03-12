@@ -1,16 +1,17 @@
 <div class="px-2 sm:px-0">
     <header>
-        <div class="container flex justify-between items-center py-3 mx-auto relative   ">
+        <div class="container flex justify-between items-center py-3 mx-auto relative" [ngClass]="navbarToggle() ? 'class' : ''" >
             <div class="invisible"></div>
             <div class="absolute transition-all duration-500 flex justify-between w-full md:w-[56%] z-10 items-center top-[66px] md:static bottom-2 md:visible mobile-nav md:opacity-100 md:!h-auto md:flex-row flex-col md:py-0 lg:bg-transparent bg-white" [ngClass]="navbarToggle() ? 'flex-col visible left-0 opacity-100 py-3' : 'invisible -left-full opacity-0'" >
                 <div>
                     <nav>
-                        <ul class="flex justify-end items-center">
+                        <ul class="group/nav flex justify-end items-center py-2" #navContainer>
                             @for (nav of navlinks(); track $index) {   
                                 <li class="border-x border-slate-300 px-2" (click)="navbarToggle.set(false)" [ngClass]="[$first ? 'border-s-0' : '', $last ? 'border-e-0' : '']" >
-                                    <a class="transition-colors duration-300 rounded-md px-4 py-2 hover:bg-slate-100" [routerLink]="nav.path" routerLinkActive="bg-slate-100" >{{ nav.link }}</a>
+                                    <a class="px-4 py-2 rounded-md relative z-10" [routerLink]="nav.path" #navLink >{{ nav.link }}</a>
                                 </li>
                             }
+                            <div class="absolute transition-all duration-300 ease-in-out rounded-md bg-slate-100 scale-0 group-hover/nav:scale-100" [ngStyle]="position()[0]"></div>
                         </ul>
                     </nav>
                 </div>
