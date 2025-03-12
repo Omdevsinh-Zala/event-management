@@ -11,7 +11,7 @@
                                     <a class="px-4 py-2 rounded-md relative z-10" [routerLink]="nav.path" #navLink >{{ nav.link }}</a>
                                 </li>
                             }
-                            <div class="absolute transition-all duration-300 ease-in-out rounded-md bg-slate-100 scale-0 group-hover/nav:scale-100" [ngStyle]="position()[0]"></div>
+                            <div class="fixed transition-all duration-300 ease-in-out rounded-md bg-slate-100 scale-0 group-hover/nav:scale-100" [ngStyle]="position()[0]"></div>
                         </ul>
                     </nav>
                 </div>
