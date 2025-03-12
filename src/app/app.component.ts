@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { MessageComponent } from "./message/message.component";
 import { FireMessagingService } from './services/fire-messaging.service';
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ export class AppComponent {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    if(isPlatformBrowser(this.platformId)) {
+    if(isPlatformBrowser(this.platformId) && environment.production) {
       this.messagingService.requestPermission();
     }
   }

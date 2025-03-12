@@ -1,6 +1,6 @@
 importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-messaging-compat.js');
-import { environment } from './environments/environment.prod'
+import { environment } from './environments/environment'
 
 firebase.initializeApp({
   apiKey: environment.firebaseConfig.apiKey,

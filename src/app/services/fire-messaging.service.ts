@@ -1,7 +1,7 @@
 import { Inject, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { getMessaging, getToken, Messaging, onMessage } from '@angular/fire/messaging';
 import { BehaviorSubject } from 'rxjs';
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 import { doc, Firestore, getDoc, getFirestore, updateDoc } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { isPlatformBrowser } from '@angular/common';
@@ -19,7 +19,7 @@ export class FireMessagingService {
   ) {
     this.fireStore = getFirestore();
     this.auth = inject(AuthService);
-    if(isPlatformBrowser(this.platformId)) {
+    if(isPlatformBrowser(this.platformId) && environment.production) {
       this.messaging = getMessaging();
   
       onMessage(this.messaging, (payload) => {
@@ -30,7 +30,7 @@ export class FireMessagingService {
   }
 
   async requestPermission() {
-    if (!isPlatformBrowser(this.platformId) || !this.messaging) {
+    if (!isPlatformBrowser(this.platformId) || !this.messaging || !environment.production) {
       console.log('Messaging not available in this environment');
       return;
     }
