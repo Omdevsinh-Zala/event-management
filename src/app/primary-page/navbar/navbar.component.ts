@@ -65,5 +65,6 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     this.fireStore.loggedUser.set(null);
     this.localStorage.removeItem('user');
     this.loginService.singOut();
+    this.route.navigateByUrl('/login');
   }
 }

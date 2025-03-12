@@ -34,14 +34,36 @@ export class FireMessagingService {
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          // If there are multiple registrations, unregister all but keep the newest
+          if (registrations.length > 1) {
+            
+            // Convert readonly array to regular array we can sort
+            const regArray = Array.from(registrations);
+            
+            // Sort by most recently registered
+            regArray.sort((a, b) => 
+              (b.active?.scriptURL || '') > (a.active?.scriptURL || '') ? 1 : -1
+            );
+            
+            // Keep the first/newest and unregister the rest
+            const keepRegistration = regArray[0];
+            
+            for (let i = 1; i < regArray.length; i++) {
+              regArray[i].unregister();
+            }
+          }
+        });
+        const permission = await Notification.requestPermission();
         
         // Wait until the service worker is active
-        if (registration.active) {
+        if (registration.active && permission) {
           this.sendConfigToServiceWorker(registration.active);
           this.requestPermission();
         } else {
           navigator.serviceWorker.ready.then(reg => {
             this.sendConfigToServiceWorker(reg.active!);
+            this.requestPermission();
           });
         }
       } catch (error) {
