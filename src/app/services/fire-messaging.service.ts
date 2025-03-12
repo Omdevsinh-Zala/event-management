@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { doc, Firestore, getDoc, getFirestore, updateDoc } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { isPlatformBrowser } from '@angular/common';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,18 +14,18 @@ export class FireMessagingService {
   private messaging: Messaging | null = null;
   private fireStore: Firestore;
   private auth: AuthService;
-  currentMessage = new BehaviorSubject<any>(null);
+  private message:MessageService;
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.fireStore = getFirestore();
     this.auth = inject(AuthService);
+    this.message = inject(MessageService);
     if(isPlatformBrowser(this.platformId) && environment.production) {
       this.messaging = getMessaging();
   
       onMessage(this.messaging, (payload) => {
-        console.log('Message recived:', payload)
-        this.currentMessage.next(payload);
+        this.message.success(payload.notification?.body ? payload.notification?.body : 'New notification arrived!');
       });
     }
   }
@@ -44,7 +45,7 @@ export class FireMessagingService {
           });
         }
       } catch (error) {
-        console.error('Service Worker registration failed:', error);
+        console.error(error);
       }
     }
   }
@@ -59,19 +60,15 @@ export class FireMessagingService {
 
   async requestPermission() {
     if (!isPlatformBrowser(this.platformId) || !this.messaging || !environment.production) {
-      console.log('Messaging not available in this environment');
       return;
     }
     try {
       const currrentToken = await getToken(this.messaging, { vapidKey: environment.vapidKey });
       if(currrentToken) {
-        console.log('FMC Token:', currrentToken);
         await this.storeTokenToUser(currrentToken);
-      } else {
-        console.log('No registration token available. Request permission to generate one.');
       }
     } catch(error) {
-      console.error('An error occurred while retrieving token:', error);
+      console.error(error);
     }
   }
 
@@ -80,10 +77,10 @@ export class FireMessagingService {
     const userData = await getDoc(userCollection);
     const user = { ...userData.data() };
     let data;
-    if(user['FMCToken']) {
+    if(user['FCMToken']) {
       return null
     } else {
-      data = { FMCToken: token };
+      data = { FCMToken: token };
       return await updateDoc(userCollection, data);
     }
   }
