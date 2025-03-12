@@ -40,7 +40,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     this.navLink.forEach((e, i) => {
       e.nativeElement.addEventListener('mouseover', () => {
         const navPosition = e.nativeElement.getBoundingClientRect();
-        this.position.set([{ top: `${navPosition.top}px`, left: `${navPosition.left - 192}px`, scale: '1', height: `${navPosition.height}px`, width: `${navPosition.width}px`}]);
+        this.position.set([{ top: `${navPosition.top}px`, left: `${navPosition.left}px`, scale: '1', height: `${navPosition.height}px`, width: `${navPosition.width}px`}]);
       });
     });
     this.navContainer.nativeElement.addEventListener('mouseleave', () => {
