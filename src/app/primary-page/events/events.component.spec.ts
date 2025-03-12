@@ -4,7 +4,7 @@ import { EventsComponent } from './events.component';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 import { provideState } from '@ngrx/store';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';

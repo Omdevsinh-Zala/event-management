@@ -1,6 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MessageComponent } from "./message/message.component";
+import { FireMessagingService } from './services/fire-messaging.service';
+import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +14,12 @@ import { MessageComponent } from "./message/message.component";
 })
 export class AppComponent {
   title = 'event-management';
+  private messagingService = inject(FireMessagingService)
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    if(isPlatformBrowser(this.platformId) && environment.production) {
+      this.messagingService.requestPermission();
+    }
+  }
 }
