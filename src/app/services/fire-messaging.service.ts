@@ -33,11 +33,11 @@ export class FireMessagingService {
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-        console.log('Service Worker registered with scope:', registration.scope);
         
         // Wait until the service worker is active
         if (registration.active) {
           this.sendConfigToServiceWorker(registration.active);
+          this.requestPermission();
         } else {
           navigator.serviceWorker.ready.then(reg => {
             this.sendConfigToServiceWorker(reg.active!);
