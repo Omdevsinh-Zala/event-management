@@ -70,3 +70,7 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb {
   @apply bg-slate-300 rounded-lg hover:bg-slate-400;
 }
+
+html:has(.class) {
+  overflow: hidden;
+}
