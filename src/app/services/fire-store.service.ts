@@ -42,17 +42,17 @@ export class FireStoreService {
     }
   }
 
-  async getUserData(id: string) {
-    if(id) {
-      const userCollection = doc(this.fireStore, this.userPath , id);
-      const data =  await getDoc(userCollection)
-      if(data.exists()) {
-        this.loggedUser.set({...data.data()});
-      } else {
-        this.loggedUser.set(null);
-      }
-    }
-  }
+  // async getUserData(id: string) {
+  //   if(id) {
+  //     const userCollection = doc(this.fireStore, this.userPath , id);
+  //     const data =  await getDoc(userCollection)
+  //     if(data.exists()) {
+  //       this.loggedUser.set({...data.data()});
+  //     } else {
+  //       this.loggedUser.set(null);
+  //     }
+  //   }
+  // }
 
   async addEventData(id: string, eventId: string) {
     const userCollection = doc(this.fireStore, this.userPath, id);
@@ -73,7 +73,7 @@ export class FireStoreService {
     const userCollection = doc(this.fireStore, this.userPath, id);
     const userData = await getDoc(userCollection);
     const user = { ...userData.data() };
-    const array = user['events'].filter((uid: string) => uid !== eventId);
+    const array = user['events']!.filter((uid: string) => uid !== eventId);
     const data = {
       events: array
     }
