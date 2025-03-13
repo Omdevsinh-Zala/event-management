@@ -1,6 +1,5 @@
 import { Inject, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { getMessaging, getToken, Messaging, onMessage } from '@angular/fire/messaging';
-import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { doc, Firestore, getDoc, getFirestore, updateDoc } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
@@ -31,37 +30,21 @@ export class FireMessagingService {
   }
 
   async initializeFirebaseMessaging() {
-    if ('serviceWorker' in navigator && this.auth.getuid()) {
+    if ('serviceWorker' in navigator) {
       try {
-        await navigator.serviceWorker.getRegistrations().then(registrations => {
-          // If there are multiple registrations, unregister all but keep the newest
-          if (registrations.length > 0) {
-            
-            // Convert readonly array to regular array we can sort
-            const regArray = Array.from(registrations);
-            
-            // Sort by most recently registered
-            regArray.sort((a, b) => 
-              (b.active?.scriptURL || '') > (a.active?.scriptURL || '') ? 1 : -1
-            );
-            
-            for (let i = 0; i <= regArray.length; i++) {
-              regArray[i].unregister();
-            }
-          }
-        });
         const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
         const permission = await Notification.requestPermission();
-        
-        // Wait until the service worker is active
-        if (registration.active && permission) {
-          this.sendConfigToServiceWorker(registration.active);
-          this.requestPermission();
-        } else {
-          navigator.serviceWorker.ready.then(reg => {
-            this.sendConfigToServiceWorker(reg.active!);
+        if(permission) {
+          // Wait until the service worker is active
+          if (registration.active) {
+            this.sendConfigToServiceWorker(registration.active);
             this.requestPermission();
-          });
+          } else {
+            navigator.serviceWorker.ready.then(reg => {
+              this.sendConfigToServiceWorker(reg.active!);
+              this.requestPermission();
+            });
+          }
         }
       } catch (error) {
         console.error(error);
