@@ -54,6 +54,10 @@ export class LoginComponent {
     })
   );
 
+  loginWithGmail() {
+    this.formStore.dispatch(formActions.loginUserWithGoogle());
+  }
+
   showPassword = signal(false);
   submit() {
     const email = this.loginForm().value.email;

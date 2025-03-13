@@ -42,18 +42,6 @@ export class FireStoreService {
     }
   }
 
-  // async getUserData(id: string) {
-  //   if(id) {
-  //     const userCollection = doc(this.fireStore, this.userPath , id);
-  //     const data =  await getDoc(userCollection)
-  //     if(data.exists()) {
-  //       this.loggedUser.set({...data.data()});
-  //     } else {
-  //       this.loggedUser.set(null);
-  //     }
-  //   }
-  // }
-
   async addEventData(id: string, eventId: string) {
     const userCollection = doc(this.fireStore, this.userPath, id);
     const userData = await getDoc(userCollection);

@@ -3,6 +3,7 @@ import { LoginService } from './login.service';
 import { AuthService } from './auth.service';
 import { RegisterUser } from '../forms/module';
 import { createUserWithEmailAndPassword, deleteUser, signInWithEmailAndPassword, signOut, updateProfile } from '@angular/fire/auth'; // Import the correct function
+import { getFirestore } from '@angular/fire/firestore';
 
 // Mock Firebase Auth module
 jest.mock('@angular/fire/auth', () => ({
@@ -13,6 +14,10 @@ jest.mock('@angular/fire/auth', () => ({
   signOut: jest.fn(),
   deleteUser: jest.fn()
 }));
+
+jest.mock('@angular/fire/firestore', () => ({
+  getFirestore: jest.fn()
+}))
 
 describe('LoginService', () => {
   let service: LoginService;
