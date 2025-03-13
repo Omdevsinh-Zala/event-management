@@ -49,11 +49,6 @@ export class FireMessagingService {
           if (existingRegistration && existingRegistration.active) {
             this.sendConfigToServiceWorker(existingRegistration.active);
             this.requestPermission();
-          } else {
-            navigator.serviceWorker.ready.then(reg => {
-              this.sendConfigToServiceWorker(reg.active!);
-              this.requestPermission();
-            });
           }
         }
       } catch (error) {
@@ -88,12 +83,7 @@ export class FireMessagingService {
     const userCollection = doc(this.fireStore, 'users', this.auth.getuid());
     const userData = await getDoc(userCollection);
     const user = { ...userData.data() };
-    let data;
-    if(user['FCMToken']) {
-      return null
-    } else {
-      data = { FCMToken: token };
-      return await updateDoc(userCollection, data);
-    }
+    let data = { FCMToken: token };
+    return await updateDoc(userCollection, data);
   }
 }
