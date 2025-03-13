@@ -120,22 +120,49 @@ export class FormsEfects {
         )
     })
 
-    //For google sign in
-    // registerWithGoogleEffect$ = createEffect((actions$ = inject(Actions), loginService = inject(LoginService), router = inject(Router)) => {
-    //     return actions$.pipe(
-    //         ofType(formActions.registerUserWithGoogle),
-    //         switchMap(( value ) => {
-    //             return from(loginService.loginWithGoogle()).pipe(
-    //                 // delay(2000),
-    //                 map(() => {
-    //                     router.navigateByUrl('/login')
-    //                     return formActions.success({ message: 'Registration Successfull' })
-    //                 }),
-    //                 catchError((err:FirebaseError) => {
-    //                     return of(formActions.error({ error: err.code.split('/')[1] }))
-    //                 })
-    //             )
-    //         })
-    //     )
-    // })
+    // For Google register
+    registerWithGoogleEffect$ = createEffect((actions$ = inject(Actions), loginService = inject(LoginService), auth = inject(AuthService), message = inject(MessageService)) => {
+        return actions$.pipe(
+            ofType(formActions.registerUserWithGoogle),
+            switchMap(( value ) => {
+                return from(loginService.registerWithGoogle()).pipe(
+                    map((value) => {
+                        if(value !== null) {
+                            const data:fireStoreUser = {
+                                email: value.email!,
+                                role: 'user',
+                                uid: auth.getuid()
+                            };
+                            return formActions.registerUserWithFirstore({ data: data });
+                        } else {
+                            message.error('Error loging in. Please ty again later')
+                            return formActions.error({ error: 'Error loging in. Please ty again later'})
+                        }
+                    }),
+                    catchError((err:FirebaseError) => {
+                        message.error(err.code)
+                        return of(formActions.error({ error: err.code.split('/')[1] }))
+                    })
+                )
+            })
+        )
+    })
+
+    //For login with google
+    loginWithGoogleEffect$ = createEffect((actions$ = inject(Actions), loginService = inject(LoginService), message = inject(MessageService)) => {
+        return actions$.pipe(
+            ofType(formActions.loginUserWithGoogle),
+            switchMap(( value ) => {
+                return from(loginService.loginWithGoole()).pipe(
+                    map(() => {
+                        return formActions.loginUserWithFirstore();
+                    }),
+                    catchError((err:FirebaseError) => {
+                        message.error(err.code)
+                        return of(formActions.error({ error: err.code.split('/')[1] }))
+                    })
+                )
+            })
+        )
+    })
 }
