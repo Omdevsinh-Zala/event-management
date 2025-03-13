@@ -32,12 +32,22 @@ export class FireMessagingService {
   async initializeFirebaseMessaging() {
     if ('serviceWorker' in navigator) {
       try {
-        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
         const permission = await Notification.requestPermission();
+         // Check for existing service worker registrations
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        
+        // Look for an existing firebase messaging service worker
+        let existingRegistration = registrations.find(registration => 
+          registration.active && 
+          registration.active.scriptURL.includes('firebase-messaging-sw.js')
+        );
+        if(!existingRegistration) {
+          existingRegistration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        }
         if(permission) {
           // Wait until the service worker is active
-          if (registration.active) {
-            this.sendConfigToServiceWorker(registration.active);
+          if (existingRegistration && existingRegistration.active) {
+            this.sendConfigToServiceWorker(existingRegistration.active);
             this.requestPermission();
           } else {
             navigator.serviceWorker.ready.then(reg => {
