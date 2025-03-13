@@ -54,6 +54,7 @@
                   "maximumError": "8MB"
                 }
               ],
+              "optimization": true,
               "outputHashing": "all",
               "fileReplacements": [
                 {
