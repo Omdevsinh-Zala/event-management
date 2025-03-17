@@ -50,7 +50,7 @@ export class FormsEfects {
                             }
                             localStorage.setItem('user', JSON.stringify(userData));
                         }
-                        router.navigateByUrl('/home');
+                        router.navigateByUrl('/event/home');
                         message.success('Registration Successfull');
                         return formActions.success({ message: 'Registration Successfull' });
                     }),
@@ -94,13 +94,13 @@ export class FormsEfects {
                                     email: data['email'],
                                     role: data['role'],
                                 }
-                                router.navigateByUrl('/admin');
+                                router.navigateByUrl('/event/admin');
                                 localStorage.setItem('user', JSON.stringify(userData));
                             } else {
                                 const userData = {
                                     role: data['role']
                                 }
-                                router.navigateByUrl('/home');
+                                router.navigateByUrl('/event/home');
                                 localStorage.setItem('user', JSON.stringify(userData));
                             }
                             message.success('Login Successfull');

@@ -21,18 +21,18 @@ import { LocalstorageService } from '../../services/localstorage.service';
 export class NavbarComponent implements OnInit, AfterViewInit {
   navlinks = signal([
     {
-      path: '/home',
+      path: 'home',
       link: 'Home',
     },
     {
-      path: '/events',
+      path: 'events',
       link: 'Events',
     },
   ]);
   ngOnInit(): void {
     const data = JSON.parse(this.localStorage.getItem('user') || '[]');
     if(data && data.email && data.role === 'admin') {
-      this.navlinks.update((links) => [...links, { path: '/admin', link: 'Admin' }]);
+      this.navlinks.update((links) => [...links, { path: 'admin', link: 'Admin' }]);
     }
   }
   position: WritableSignal<{top?: string, left?: string, scale: string, height?: string, width?: string}[]> = signal([]);
