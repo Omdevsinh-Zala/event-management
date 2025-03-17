@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
     if(data && data.length > 0) {
       return data.find((uid) => uid == this.auth.getuid());
     }
-    return;
+    return null;
   }
 
   isUser() {

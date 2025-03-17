@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EventsStore } from './events.store';
@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
   imports: [MatProgressSpinnerModule, MatIconModule, AsyncPipe, DatePipe, MatProgressSpinnerModule, RouterLink],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers:[EventsStore]
 })
 export class EventsComponent implements OnInit {

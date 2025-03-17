@@ -112,8 +112,13 @@ export class FormsEfects {
                         }
                     }),
                     catchError((err:FirebaseError) => {
-                        message.error(err.code.split('/')[1]);
-                        return of(formActions.error({ error: err.code.split('/')[1] }));
+                        if(err && err.code) {
+                            message.error(err.code.split('/')[1]);
+                            return of(formActions.error({ error: err.code.split('/')[1] }));
+                        } else {
+                            message.error('Encountering an error while attempting to log in with Google');
+                            return of(formActions.error({ error: 'Encountering an error while attempting to log in with Google' }));
+                        }
                     })
                 )
             })
@@ -135,8 +140,8 @@ export class FormsEfects {
                             };
                             return formActions.registerUserWithFirstore({ data: data });
                         } else {
-                            message.error('Error loging in. Please ty again later')
-                            return formActions.error({ error: 'Error loging in. Please ty again later'})
+                            message.error('Encountering an error while attempting to register with Google')
+                            return formActions.error({ error: 'Encountering an error while attempting to register with Google'})
                         }
                     }),
                     catchError((err:FirebaseError) => {
