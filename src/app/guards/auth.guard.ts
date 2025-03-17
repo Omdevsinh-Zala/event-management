@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (path === 'login' || path === 'register') {
     if (localData['role']) {
       // Redirect logged-in users away from login/register
-      router.navigate(['/home']); // Change to your default logged-in route
+      router.navigate(['/event/home']); // Change to your default logged-in route
       return false;
     }
     return true;

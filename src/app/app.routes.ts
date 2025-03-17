@@ -14,7 +14,7 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
-        path: '',
+        path: 'event',
         loadComponent: () => import('./primary-page/primary-page.component').then((m) => m.PrimaryPageComponent),
         children:[
             {
@@ -35,6 +35,6 @@ export const routes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'home'
+        redirectTo: '/login'
     }
 ];
