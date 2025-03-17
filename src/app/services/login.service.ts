@@ -20,18 +20,17 @@ export class LoginService {
   }
 
   async registerWithGoogle() {
-    const provider = new GoogleAuthProvider();
     try {
+      const provider = new GoogleAuthProvider();
       const register = await signInWithPopup(this.authService.getAuth(), provider)
       const user = register.user
-    const allowRegister = await this.checkUser(user.uid);
-    if(allowRegister) {
-      return null
-    } else {
-      return user;
-    }
+      const allowRegister = await this.checkUser(user.uid);
+      if(allowRegister) {
+        return null
+      } else {
+        return user;
+      }
     } catch(error) {
-      console.error(error)
       return null;
     }
   }
@@ -42,7 +41,6 @@ export class LoginService {
       await signInWithPopup(this.authService.getAuth(), provider);
       return null
     } catch(error) {
-      console.error(error)
       return null;
     }
   }

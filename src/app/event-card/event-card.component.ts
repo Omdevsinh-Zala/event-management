@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, OnInit, output, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, OnInit, output, signal, ViewChild } from '@angular/core';
 import { EventData } from '../admin/module';
 import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +14,7 @@ import { DocumentData } from '@angular/fire/firestore';
   imports: [DatePipe, MatIconModule, CommonModule, AsyncPipe, MatProgressSpinner],
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventCardComponent implements OnInit {
   //Inputs
