@@ -50,7 +50,7 @@ export class FormsEfects {
                             }
                             localStorage.setItem('user', JSON.stringify(userData));
                         }
-                        router.navigateByUrl('/home');
+                        router.navigateByUrl('/event/home');
                         message.success('Registration Successfull');
                         return formActions.success({ message: 'Registration Successfull' });
                     }),
@@ -94,13 +94,13 @@ export class FormsEfects {
                                     email: data['email'],
                                     role: data['role'],
                                 }
-                                router.navigateByUrl('/admin');
+                                router.navigateByUrl('/event/admin');
                                 localStorage.setItem('user', JSON.stringify(userData));
                             } else {
                                 const userData = {
                                     role: data['role']
                                 }
-                                router.navigateByUrl('/home');
+                                router.navigateByUrl('/event/home');
                                 localStorage.setItem('user', JSON.stringify(userData));
                             }
                             message.success('Login Successfull');
@@ -112,30 +112,62 @@ export class FormsEfects {
                         }
                     }),
                     catchError((err:FirebaseError) => {
-                        message.error(err.code.split('/')[1]);
-                        return of(formActions.error({ error: err.code.split('/')[1] }));
+                        if(err && err.code) {
+                            message.error(err.code.split('/')[1]);
+                            return of(formActions.error({ error: err.code.split('/')[1] }));
+                        } else {
+                            message.error('Encountering an error while attempting to log in with Google');
+                            return of(formActions.error({ error: 'Encountering an error while attempting to log in with Google' }));
+                        }
                     })
                 )
             })
         )
     })
 
-    //For google sign in
-    // registerWithGoogleEffect$ = createEffect((actions$ = inject(Actions), loginService = inject(LoginService), router = inject(Router)) => {
-    //     return actions$.pipe(
-    //         ofType(formActions.registerUserWithGoogle),
-    //         switchMap(( value ) => {
-    //             return from(loginService.loginWithGoogle()).pipe(
-    //                 // delay(2000),
-    //                 map(() => {
-    //                     router.navigateByUrl('/login')
-    //                     return formActions.success({ message: 'Registration Successfull' })
-    //                 }),
-    //                 catchError((err:FirebaseError) => {
-    //                     return of(formActions.error({ error: err.code.split('/')[1] }))
-    //                 })
-    //             )
-    //         })
-    //     )
-    // })
+    // For Google register
+    registerWithGoogleEffect$ = createEffect((actions$ = inject(Actions), loginService = inject(LoginService), auth = inject(AuthService), message = inject(MessageService)) => {
+        return actions$.pipe(
+            ofType(formActions.registerUserWithGoogle),
+            switchMap(( value ) => {
+                return from(loginService.registerWithGoogle()).pipe(
+                    map((value) => {
+                        if(value !== null) {
+                            const data:fireStoreUser = {
+                                email: value.email!,
+                                role: 'user',
+                                uid: auth.getuid()
+                            };
+                            return formActions.registerUserWithFirstore({ data: data });
+                        } else {
+                            message.error('Encountering an error while attempting to register with Google')
+                            return formActions.error({ error: 'Encountering an error while attempting to register with Google'})
+                        }
+                    }),
+                    catchError((err:FirebaseError) => {
+                        message.error(err.code)
+                        return of(formActions.error({ error: err.code.split('/')[1] }))
+                    })
+                )
+            })
+        )
+    })
+
+    //For login with google
+    loginWithGoogleEffect$ = createEffect((actions$ = inject(Actions), loginService = inject(LoginService), message = inject(MessageService)) => {
+        return actions$.pipe(
+            ofType(formActions.loginUserWithGoogle),
+            switchMap(( value ) => {
+                return from(loginService.loginWithGoole()).pipe(
+                    map(() => {
+                        return formActions.loginUserWithFirstore();
+                    }),
+                    catchError((err:FirebaseError) => {
+                        message.error(err.code)
+                        return of(formActions.error({ error: err.code.split('/')[1] }))
+                    })
+                )
+            })
+        )
+    })
 }

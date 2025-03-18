@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EventsStore } from './events.store';
@@ -12,13 +12,14 @@ import { RouterLink } from '@angular/router';
   imports: [MatProgressSpinnerModule, MatIconModule, AsyncPipe, DatePipe, MatProgressSpinnerModule, RouterLink],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers:[EventsStore]
 })
 export class EventsComponent implements OnInit {
   private store = inject(EventsStore);
   today = new Date();
   loading$ = this.store.loading$;
-  eventsData$ = this.store.eventData$;
+  eventsData$ = this.store.eventsData$;
   eventsId$ = this.store.eventsIds$;
   registerEventId$ = this.store.registerEventId$;
   registerEventLoading$ = this.store.registerEventLoading$;
@@ -41,9 +42,8 @@ export class EventsComponent implements OnInit {
         description: data.description,
         place: data.place,
         date: data.date,
-        participants: data.participants
+        participants: [...data.participants, this.auth.getuid()]
        };
-       newData.participants.push(this.auth.getuid())
     } else {
       newData = { 
         title: data.title,
@@ -65,6 +65,6 @@ export class EventsComponent implements OnInit {
     if(data && data.length > 0) {
       return data.find((uid) => uid == this.auth.getuid());
     }
-    return;
+    return null;
   }
 }

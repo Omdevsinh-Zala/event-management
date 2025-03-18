@@ -56,9 +56,9 @@ export class RegisterComponent {
 
   showPassword = signal(false);
 
-  // registerWithGmail() {
-  //   this.formStore.dispatch(formActions.registerUserWithGoogle());
-  // }
+  registerWithGmail() {
+    this.formStore.dispatch(formActions.registerUserWithGoogle());
+  }
 
   registerWithEmail() {
     const email = this.registerForm().value.email;

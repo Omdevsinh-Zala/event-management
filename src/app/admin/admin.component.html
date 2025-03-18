@@ -27,8 +27,8 @@
 @let updateParticipantsEmpty = updateEventForm().get('participants')?.value == ''; -->
 
 <div class="container mx-auto px-2 md:p-0">
-  <div class="flex justify-between items-start pt-2 flex-col sm:flex-row sm:items-center sm:gap-0 gap-5">
-    <div class="relative w-full sm:w-80">
+  <div class="flex justify-between pt-2 flex-row items-center sm:gap-0 gap-5">
+    <div class="relative w-80 sm:w-80">
       <input
         class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3"
         type="search"
@@ -58,9 +58,9 @@
   </div>
   <h2 class="text-4xl py-4">Events</h2>
   @if ((showModel$() | async) == true) {
-      <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black transition-all duration-300 scale-0 z-10" [ngClass]="(showaddEventModel$() | async) ? 'scale-100 opacity-100 !visible' : ''">
+      <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black transition-all duration-300 scale-0 z-40" [ngClass]="(showaddEventModel$() | async) ? 'scale-100 opacity-100 !visible' : ''">
           <div class="relative w-dvw h-dvh" (click)=" (titleEmpty && imageEmpty && desEmpty && placeEmpty && dateEmpty) ? toggleModel() : ''">
-            <div class="p-3 lg:p-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 h-11/12 lg:w-1/2 lg:h-2/3" (click)="$event.stopPropagation()">
+            <div class="p-3 lg:p-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 lg:w-1/2 lg:h-2/3" (click)="$event.stopPropagation()">
                 <div class="relative flex flex-col gap-2 w-full h-full rounded-lg p-5 bg-white transition-all duration-500 scale-0" [ngClass]="(showaddEventModel$() | async) ? 'scale-100' : ''">
                     <h3 class="text-3xl">Add Event</h3>
                     <form class="py-3 px-8 flex flex-col gap-6 overflow-y-scroll custom-scrollbar" [formGroup]="eventForm()">
@@ -80,7 +80,7 @@
                             <div class="w-full 2xl:w-1/2 flex justify-start items-center h-24 sm:h-[unset]">
                                 <div class="relative w-full">
                                     <div class="absolute my-auto flex gap-2 2xl:gap-5 items-start w-full justify-between 2xl:justify-[unset] flex-col sm:flex-row sm:items-center">
-                                        <button class="border border-slate-400 py-2 px-4 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-md">Upload image</button>
+                                        <button class="border border-slate-400 py-2 px-4 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-md mx-auto lg:mx-0">Upload image</button>
                                         @if(fileName()) {
                                             <div class="relative w-full sm:w-1/2">
                                                 <p class="w-40 overflow-hidden whitespace-nowrap text-ellipsis" >{{fileName()}}</p>
@@ -152,13 +152,13 @@
                         </div>
                         <!-- <div class="relative shrink-0">
                             <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3" 
-                                type="text" formControlName="participentios" id="participentios" autocomplete="new-password" #participentios>
-                            <label class="label" [ngClass]="participentios.value.trim() != '' ? 'float-label' : ''">Participentios<span class="ps-[2px]" [ngClass]="[participentiosRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
-                            @if (participentiosRequired) {
+                                type="text" formControlName="participants" id="participants" autocomplete="new-password" #participants>
+                            <label class="label" [ngClass]="participants.value.trim() != '' ? 'float-label' : ''">participants<span class="ps-[2px]" [ngClass]="[participantsRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                            @if (participantsRequired) {
                                 <div
                                     class="form-error-msg"
                                 >
-                                Please enter participentios.
+                                Please enter participants.
                                 </div>
                             }
                         </div> -->
@@ -184,9 +184,9 @@
       </div>
   }
   @if ((showUpdateModel$() | async) == true) {
-    <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black transition-all duration-300 scale-0 z-10" [ngClass]="(showUpdateEventModel$() | async) ? 'scale-100 opacity-100 !visible' : ''">
-        <div class="relative w-dvw h-dvh" (click)=" (updateTitleEmpty && updateImageEmpty && updateDesEmpty && updatePlaceEmpty && updateDateEmpty) ? closeUpdateEventForm() : ''">
-          <div class="p-3 lg:p-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 h-11/12 lg:w-1/2 lg:h-2/3" (click)="$event.stopPropagation()">
+    <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black transition-all duration-300 scale-0 z-40" [ngClass]="(showUpdateEventModel$() | async) ? 'scale-100 opacity-100 !visible' : ''">
+        <div class="relative w-dvw h-dvh z-40" (click)=" (updateTitleEmpty && updateImageEmpty && updateDesEmpty && updatePlaceEmpty && updateDateEmpty) ? closeUpdateEventForm() : ''">
+          <div class="p-3 lg:p-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 lg:w-1/2 lg:h-2/3" (click)="$event.stopPropagation()">
               <div class="relative flex flex-col gap-2 w-full h-full rounded-lg p-5 bg-white transition-all duration-500 scale-0" [ngClass]="(showUpdateEventModel$() | async) ? 'scale-100' : ''">
                   <h3 class="text-3xl">Add Event</h3>
                   <form class="py-3 px-8 flex flex-col gap-6 overflow-y-scroll custom-scrollbar" [formGroup]="updateEventForm()">
@@ -206,7 +206,7 @@
                           <div class="w-full 2xl:w-1/2 flex justify-start items-center h-24 sm:h-[unset]">
                               <div class="relative w-full">
                                   <div class="absolute my-auto flex gap-2 2xl:gap-5 items-start w-full justify-between 2xl:justify-[unset] flex-col sm:flex-row sm:items-center">
-                                      <button class="border border-slate-400 py-2 px-4 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-md">Upload image</button>
+                                      <button class="border border-slate-400 py-2 px-4 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-md mx-auto lg:mx-0">Upload image</button>
                                       @if(fileName()) {
                                           <div class="relative w-full sm:w-1/2">
                                               <p class="w-40 overflow-hidden whitespace-nowrap text-ellipsis" >{{fileName()}}</p>
@@ -278,13 +278,13 @@
                       </div>
                       <!-- <div class="relative shrink-0">
                           <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3" 
-                              type="text" formControlName="participentios" id="participentios" autocomplete="new-password" #participentios>
-                          <label class="label" [ngClass]="participentios.value.trim() != '' ? 'float-label' : ''">Participentios<span class="ps-[2px]" [ngClass]="[updateParticipentiosRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
-                          @if (updateParticipentiosRequired) {
+                              type="text" formControlName="participants" id="participants" autocomplete="new-password" #participants>
+                          <label class="label" [ngClass]="participants.value.trim() != '' ? 'float-label' : ''">participants<span class="ps-[2px]" [ngClass]="[updateparticipantsRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                          @if (updateparticipantsRequired) {
                               <div
                                   class="form-error-msg"
                               >
-                              Please enter participentios.
+                              Please enter participants.
                               </div>
                           }
                       </div> -->
@@ -319,7 +319,7 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:pb-5 pb-0">
             @for (event of (eventData$() | async); track $index) {
                 @let id = (eventIds$() | async)![$index];
-                <app-event-card [event]="event" [eventId]="id" [targetId]="(eventId$ | async)!" (deleteEvent)="deleteEvent($event)" (editEvent)="openUpdateEventForm($event, event)" />
+                <app-event-card [event]="event" [eventId]="id" [targetId]="(eventId$ | async)!" (deleteEvent)="deleteEvent($event)" [requiredSpace]="space()" (editEvent)="openUpdateEventForm($event, event)" />
                 <!-- @if (isFuterEvent(event.date)) {
                 } -->
             }

@@ -10,7 +10,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   if(localData['role'] == 'admin' && localData['email'] == 'admin@event.com') {
     return true;
   } else {
-    router.navigateByUrl('/home');
+    router.navigateByUrl('/event/home');
     return false;
   }
 };

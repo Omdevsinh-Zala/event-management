@@ -2,7 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { LoginService } from './login.service';
 import { AuthService } from './auth.service';
 import { RegisterUser } from '../forms/module';
-import { createUserWithEmailAndPassword, deleteUser, signInWithEmailAndPassword, signOut, updateProfile } from '@angular/fire/auth'; // Import the correct function
+import { createUserWithEmailAndPassword, deleteUser, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, UserCredential } from '@angular/fire/auth'; // Import the correct function
+import { getFirestore } from '@angular/fire/firestore';
 
 // Mock Firebase Auth module
 jest.mock('@angular/fire/auth', () => ({
@@ -10,9 +11,14 @@ jest.mock('@angular/fire/auth', () => ({
   createUserWithEmailAndPassword: jest.fn(),
   updateProfile: jest.fn(),
   signInWithEmailAndPassword: jest.fn(), // Mock signInWithEmailAndPassword instead
+  signInWithPopup: jest.fn(),
   signOut: jest.fn(),
   deleteUser: jest.fn()
 }));
+
+jest.mock('@angular/fire/firestore', () => ({
+  getFirestore: jest.fn()
+}))
 
 describe('LoginService', () => {
   let service: LoginService;
@@ -97,6 +103,15 @@ describe('LoginService', () => {
       displayName: 'some', // data.email.split('@')[0]
     });
   });
+
+  // it('should register user with google', async() => {
+  //   const mockSignIn = signInWithPopup as jest.Mock;
+  //   const mockSignInRef = { user: { uid: '123' } } as UserCredential
+  //   service.checkUser = jest.fn().mockResolvedValue(false)
+  //   const result = await service.registerWithGoogle();
+  //   expect(mockSignIn).toHaveBeenCalledWith(service['authService'].getAuth(), {} as GoogleAuthProvider);
+  //   expect(service.checkUser).toHaveBeenCalledWith('123');
+  // })
 
   it('should signOut user', async () => {
     const authMock = {};

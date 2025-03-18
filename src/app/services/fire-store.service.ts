@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { doc, DocumentData, Firestore, getDoc, getFirestore, setDoc } from '@angular/fire/firestore';
+import { collection, collectionData, doc, DocumentData, Firestore, getDoc, getFirestore, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { fireStoreUser } from '../forms/module';
 import { MessageService } from './message.service';
 import { LoginService } from './login.service';
@@ -42,15 +42,35 @@ export class FireStoreService {
     }
   }
 
-  async getUserData(id: string) {
-    if(id) {
-      const userCollection = doc(this.fireStore, this.userPath , id);
-      const data =  await getDoc(userCollection)
-      if(data.exists()) {
-        this.loggedUser.set({...data.data()});
-      } else {
-        this.loggedUser.set(null);
-      }
+  async addEventData(id: string, eventId: string) {
+    const userCollection = doc(this.fireStore, this.userPath, id);
+    const userData = await getDoc(userCollection);
+    const user = { ...userData.data() };
+    let data;
+    if(user['events']) {
+      const array = user['events'];
+      array.push(eventId)
+      data = { events: array };
+    } else {
+      data = { events: [eventId] }
     }
+    return await updateDoc(userCollection, data);
+  }
+
+  async removeEventData(id: string, eventId: string) {
+    const userCollection = doc(this.fireStore, this.userPath, id);
+    const userData = await getDoc(userCollection);
+    const user = { ...userData.data() };
+    const array = user['events']!.filter((uid: string) => uid !== eventId);
+    const data = {
+      events: array
+    }
+    await updateDoc(userCollection, data);
+  }
+
+  getUserFromEvent(id: string) {
+    const userCollection = collection(this.fireStore, this.userPath);
+    const filter = query(userCollection, where('events', 'array-contains', id));
+    return collectionData(filter);
   }
 }

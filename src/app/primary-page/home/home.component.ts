@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
   private store = inject(HomeStore);
   today = new Date();
   loading$ = this.store.loading$;
-  eventsData$ = this.store.eventData$;
+  eventsData$ = this.store.eventsData$;
   eventsId$ = this.store.eventsIds$;
   unRegisterEventId$ = this.store.registerEventId$;
   unRegisterEventLoading$ = this.store.registerEventLoading$;
@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
     if(data && data.length > 0) {
       return data.find((uid) => uid == this.auth.getuid());
     }
-    return;
+    return null;
   }
 
   isUser() {

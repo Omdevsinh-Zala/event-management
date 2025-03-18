@@ -1,5 +1,5 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, inject, OnInit, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, OnInit, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
@@ -23,7 +23,8 @@ import { EventCardComponent } from '../event-card/event-card.component';
     EventCardComponent
   ],
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.scss'
+  styleUrl: './admin.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminComponent implements OnInit {
   store = inject(Store);
@@ -44,6 +45,7 @@ export class AdminComponent implements OnInit {
   eventFormData$ = signal(this.store.select(selectEventData));
   imageFile:WritableSignal<File | null> = signal(null);
   formSubmit$ = signal(this.store.select(selectLoading));
+  space = signal(500)
 
   //File input html tag refrence
   @ViewChild('file') file !: ElementRef<HTMLInputElement>;
@@ -73,6 +75,20 @@ export class AdminComponent implements OnInit {
   ngOnInit(): void {
     //To get events data
     this.store.dispatch(adminActions.getEventData());
+    window.addEventListener('load', () => {
+      if(matchMedia('(max-width: 768px)').matches) {
+        this.space.update(() => 350);
+      } else {
+        this.space.update(() => 500);
+      }
+    })
+    window.addEventListener('resize', () => {
+      if(matchMedia('(max-width: 768px)').matches) {
+        this.space.update(() => 350);
+      } else {
+        this.space.update(() => 500);
+      }
+    })
   }
 
   toggleModel() {
@@ -233,7 +249,7 @@ export class AdminComponent implements OnInit {
     if(!(validTypes.includes(data.type))) {
       setTimeout(() => {
         this.message.error('Invalid image format');
-        // this.clearUpload();
+        this.clearUpload();
         this.store.dispatch(adminActions.error());
       },500);
       return null;
@@ -242,7 +258,7 @@ export class AdminComponent implements OnInit {
       const file = data
       if(!file) {
         this.message.error('Invalid image');
-        // this.clearUpload();
+        this.clearUpload();
         resolve(null);
         return;
       }
@@ -257,7 +273,7 @@ export class AdminComponent implements OnInit {
       };
       reader.onerror = (error) => {
         this.message.error('Invalid image');
-        // this.clearUpload();
+        this.clearUpload();
         return reject(null)
       }
     })
@@ -311,6 +327,7 @@ export class AdminComponent implements OnInit {
 }
 
   closeUpdateEventForm() {
+    this.clearUpload();
     this.store.dispatch(adminActions.closeUpdateEvent());
   }
 
