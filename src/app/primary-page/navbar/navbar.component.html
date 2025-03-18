@@ -7,11 +7,13 @@
                     <nav>
                         <ul class="group/nav flex justify-end items-center py-2" #navContainer>
                             @for (nav of navlinks(); track $index) {   
-                                <li class="border-x border-slate-300 px-2" (click)="navbarToggle.set(false)" [ngClass]="[$first ? 'border-s-0' : '', $last ? 'border-e-0' : '']" >
+                                <li (click)="navbarToggle.set(false)">
                                     <a class="px-4 py-2 rounded-md relative z-10" [routerLink]="nav.path" #navLink >{{ nav.link }}</a>
                                 </li>
                             }
-                            <div class="fixed transition-all duration-200 ease-out rounded-md bg-slate-100 scale-0 group-hover/nav:scale-100" [ngStyle]="position()[0]"></div>
+                            <li>
+                                <div class="fixed transition-all duration-200 ease-in-out rounded-md bg-slate-100 scale-0 group-hover/nav:scale-100" [ngStyle]="position()[0]"></div>
+                            </li>
                         </ul>
                     </nav>
                 </div>
