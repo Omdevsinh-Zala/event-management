@@ -59,4 +59,17 @@ export class HomeComponent implements OnInit {
       };
     this.store.updateEventsData(id, newData);
   }
+
+  shouldShow(data: EventData[] | null) {
+    if(data) {
+      const index = data.findIndex((event) => event.participants.includes(this.auth.getuid()))
+      if(index >= 0) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+  }
 }
