@@ -1,9 +1,11 @@
 import {
+  APP_INITIALIZER,
   ApplicationConfig,
+  ErrorHandler,
   isDevMode,
   provideExperimentalZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 
 import { routes } from './app.routes';
 import {
@@ -44,9 +46,24 @@ import { FormsEfects } from './forms/store/form.effects';
 import { AdminEffects } from './admin/store/admin.effects';
 import { adminKey, adminReducer } from './admin/store/admin.reducer';
 import { provideHttpClient } from '@angular/common/http';
+import * as Sentry from '@sentry/angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler(),
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),

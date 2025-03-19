@@ -10,5 +10,7 @@ export const environment = {
       appId: 'your-app-id',
       measurementId: 'your-measurement-id',
     },
-    vapidKey: 'your-vapid-key'
+    vapidKey: 'your-vapid-key',
+    santryDNS: 'your-website-dns',
+    vercelSite: 'your-website-url'
   };
