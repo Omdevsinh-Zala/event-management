@@ -26,7 +26,7 @@
 <!-- @let updateParticipantsRequired = updateEventForm().get('participants')?.touched && updateEventForm().get('participants')?.dirty && updateEventForm().get('participants')?.hasError('required');
 @let updateParticipantsEmpty = updateEventForm().get('participants')?.value == ''; -->
 
-<div class="container mx-auto px-2 md:p-0">
+<div>
   <div class="flex justify-between pt-2 flex-row items-center sm:gap-0 gap-5">
     <div class="relative w-80 sm:w-80">
       <input
@@ -311,8 +311,8 @@
     </div>
 }
   @if (eventLoading$() | async) {
-        <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-25 z-20">
-            <mat-spinner diameter="50" class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2" ></mat-spinner>
+        <div class="flex justify-center items-center h-[calc(100dvh-196px)] md:h-[calc(100dvh-194px)] text-center bg-black bg-opacity-25 z-20">
+            <mat-spinner diameter="50"></mat-spinner>
         </div>
   } @else {
       @if ((eventData$() | async)!.length > 0) {
@@ -325,7 +325,7 @@
             }
         </div>
             } @else {
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <div class="flex flex-col justify-center items-center h-[calc(100dvh-196px)] md:h-[calc(100dvh-194px)] text-center">
                     <h3 class="text-3xl">No Events at this moment</h3>
                 </div>
             }

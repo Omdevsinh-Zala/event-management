@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/angular';
 import { environment } from './environments/environment';
 
 Sentry.init({
-  dsn: environment.santryDNS,
+  dsn: "https://5d606329ade79cb784b0e47f653f165d@o4508998653837312.ingest.us.sentry.io/4508998658752512",
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration()
@@ -13,7 +13,7 @@ Sentry.init({
   // Tracing
   tracesSampleRate: 1.0,
   // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-  tracePropagationTargets: ["localhost",environment.vercelSite],
+  tracePropagationTargets: ["localhost","https://event-management-sand-one.vercel.app"],
   // Session Replay
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0

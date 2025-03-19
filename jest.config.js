@@ -9,6 +9,12 @@ globalThis.ngJest = {
     setupFilesAfterEnv: ["<rootDir>/setup-jest.ts"],
     coverageDirectory: './coverage',
     collectCoverage: true,
+    coveragePathIgnorePatterns: [
+      "/node_modules/",
+      "<rootDir>/src/app/.+/.*\\.store\\.ts$", // Ignore all store.ts files in any subdirectory
+      "<rootDir>/src/app/.+/.*\\.reducer\\.ts$", // Ignore all store.ts files in any subdirectory
+      "<rootDir>/src/.+/.*\\.routes\\.ts$", // Ignore all store.ts files in any subdirectory
+    ],
     // transform: {
     //   '^.+\\.ts$': 'ts-jest',
     // },
