@@ -13,7 +13,7 @@ Sentry.init({
   // Tracing
   tracesSampleRate: 1.0,
   // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-  tracePropagationTargets: ["localhost","https://event-management-sand-one.vercel.app"],
+  // tracePropagationTargets: ["localhost","https://event-management-sand-one.vercel.app"],
   // Session Replay
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0
