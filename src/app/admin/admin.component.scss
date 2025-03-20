@@ -1,3 +1,5 @@
-::ng-deep .mdc-circular-progress__indeterminate-circle-graphic {
-    stroke: black !important;
+.spine {
+    ::ng-deep .mdc-circular-progress__indeterminate-circle-graphic {
+        stroke: black !important;
+    }
 }
