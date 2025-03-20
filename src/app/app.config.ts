@@ -47,6 +47,7 @@ import { AdminEffects } from './admin/store/admin.effects';
 import { adminKey, adminReducer } from './admin/store/admin.reducer';
 import { provideHttpClient } from '@angular/common/http';
 import * as Sentry from '@sentry/angular';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -95,6 +96,10 @@ export const appConfig: ApplicationConfig = {
     provideState(adminKey, adminReducer),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideEffects([FormsEfects, AdminEffects]),
-    provideHttpClient()
+    provideHttpClient(),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWhenStable:30000'
+    })
 ],
 };
