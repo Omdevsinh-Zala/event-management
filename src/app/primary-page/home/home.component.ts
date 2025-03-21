@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit {
 
   shouldShow(data: EventData[] | null) {
     if(data) {
-      const index = data.findIndex((event) => event.participants.includes(this.auth.getuid()))
+      const index = data.findIndex((event) => event.participants ? event.participants.includes(this.auth.getuid()) : [])
       if(index >= 0) {
         return true
       } else {

@@ -98,7 +98,7 @@ export const appConfig: ApplicationConfig = {
     provideEffects([FormsEfects, AdminEffects]),
     provideHttpClient(),
     provideServiceWorker('ngsw-worker.js', {
-      enabled: environment.production,
+      enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     })
 ],
