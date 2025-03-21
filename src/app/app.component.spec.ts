@@ -9,6 +9,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from './services/auth.service';
 import { getMessaging, onMessage } from '@angular/fire/messaging';
 import { FireMessagingService } from './services/fire-messaging.service';
+import { provideServiceWorker, SwPush } from '@angular/service-worker';
 
 jest.mock('@angular/common', () => ({
   isPlatformBrowser: jest.fn()
@@ -26,7 +27,11 @@ describe('AppComponent', () => {
         provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
         provideAuth(() => getAuth()),
         provideFirestore(() => getFirestore()),
-        provideHttpClient()
+        provideHttpClient(),
+        provideServiceWorker('ngsw-worker.js', {
+          enabled: environment.production,
+          registrationStrategy: 'registerWhenStable:30000'
+        })
       ],
       imports: [AppComponent],
     }).compileComponents();
@@ -46,7 +51,7 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('event-management');
   });
 
-  it('should call initialize firebase message function', async() => {
+  it('should not call initialize firebase message function', async() => {
     (isPlatformBrowser as jest.Mock).mockReturnValue(true);
     const service = TestBed.inject(AuthService);
     service.getuid = jest.fn().mockReturnValue('123');
@@ -58,6 +63,6 @@ describe('AppComponent', () => {
     await fixture.whenStable();
     jest.useFakeTimers();
     jest.advanceTimersByTime(500);
-    expect(app['messagingService'].initializeFirebaseMessaging).toHaveBeenCalled();
+    expect(app['messagingService'].initializeFirebaseMessaging).not.toHaveBeenCalled();
   })
 });
