@@ -30,11 +30,13 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       link: 'Events',
     },
   ]);
+  theme = signal('Light')
   ngOnInit(): void {
     const data = JSON.parse(this.localStorage.getItem('user') || '[]');
     if(data && data.email && data.role === 'admin') {
       this.navlinks.update((links) => [...links, { path: 'admin', link: 'Admin' }]);
     }
+    this.themeCheck()
   }
   position: WritableSignal<{top?: string, left?: string, scale: string, height?: string, width?: string}[]> = signal([]);
   ngAfterViewInit(): void {
@@ -67,5 +69,31 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     this.localStorage.removeItem('user');
     this.loginService.singOut();
     this.route.navigateByUrl('/login');
+  }
+
+  themeToggle() {
+    let theme = localStorage.getItem('eventTheme')
+    if(!theme) {
+        localStorage.setItem('eventTheme', 'light');
+        document.body.classList.remove('dark')
+        this.theme.update(() => 'Light')
+      }
+      if(theme == 'light') {
+        this.theme.update(() => 'Dark')
+        localStorage.setItem('eventTheme', 'dark');
+        document.body.classList.add('dark')
+      } else {
+        this.theme.update(() => 'Light')
+        localStorage.setItem('eventTheme', 'light');
+        document.body.classList.remove('dark')
+      }
+    }
+    
+    themeCheck() {
+      let theme = this.localStorage.getItem('eventTheme')
+      if(theme && theme == 'dark') {
+        this.theme.update(() => 'Dark')
+        document.body.classList.add('dark')
+    }
   }
 }
