@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, inject, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject, isDevMode, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MessageComponent } from "./message/message.component";
 import { FireMessagingService } from './services/fire-messaging.service';
@@ -22,7 +22,7 @@ export class AppComponent {
   ) {
     auth.getAuthState().subscribe({
       next:() => {
-        if(isPlatformBrowser(this.platformId) && environment.production && auth.getuid()) {
+        if(isPlatformBrowser(this.platformId) && environment.production && auth.getuid() && !isDevMode()) {
           this.messagingService.initializeFirebaseMessaging();
         }
       }
