@@ -2,8 +2,8 @@
     <div class="flex flex-col gap-4">
         @for (message of service.successMes(); track $index) {
             @if (message) {
-                <div class="flex gap-2 items-center justify-center border border-emerald-400 bg-white text-black px-6 font-medium shadow-lg py-3 text-md rounded-md h-[50px]" [@slideIn]="service.successMes.length">
-                    <span class="material-symbols-outlined text-emerald-500 text-xl">
+                <div class="text-[15px] flex gap-2 items-center justify-center border border-emerald-400 bg-white text-black px-3 md:px-6 font-medium shadow-lg py-1 md:py-3 text-md rounded-md h-[50px]" [@slideIn]="service.successMes.length">
+                    <span class="material-symbols-outlined text-emerald-500 text-base md:text-xl">
                         check_circle
                         </span>{{ message }}
                 </div>
@@ -13,8 +13,8 @@
     <div class="flex flex-col gap-4">
         @for (message of service.warnMes(); track $index) {
             @if (message) {
-                <div class="flex gap-2 items-center justify-center border border-yellow-400 bg-white text-black px-6 font-medium shadow-lg py-3 text-md rounded-md h-[50px]" [@slideIn]="service.successMes.length">
-                    <span class="material-symbols-outlined text-yellow-500 text-xl">
+                <div class="text-[15px] flex gap-2 items-center justify-center border border-yellow-400 bg-white text-black px-3 md:px-6 font-medium shadow-lg py-1 md:py-3 text-md rounded-md h-[50px]" [@slideIn]="service.successMes.length">
+                    <span class="material-symbols-outlined text-yellow-500 text-base md:text-xl">
                         warning
                         </span>{{ message }}
                 </div>
@@ -24,8 +24,8 @@
     <div class="flex flex-col gap-4">
         @for (error of service.errorMes(); track $index) {
             @if (error) {
-                <div class="flex gap-2 items-center justify-center border border-pink-400 bg-white text-black px-6 font-medium shadow-lg py-3 text-md rounded-md h-[50px]" [@slideIn]="service.errorMes.length">
-                    <span class="material-symbols-outlined text-pink-500 text-xl">
+                <div class="text-[15px] flex gap-2 items-center justify-center border border-pink-400 bg-white text-black px-3 md:px-6 font-medium shadow-lg py-1 md:py-3 text-md rounded-md h-[50px]" [@slideIn]="service.errorMes.length">
+                    <span class="material-symbols-outlined text-pink-500 text-base md:text-xl">
                         error
                         </span>{{ error }}
                 </div>
