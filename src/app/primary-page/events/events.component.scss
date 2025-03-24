@@ -1,3 +1,7 @@
+::ng-deep body.dark .mdc-circular-progress__indeterminate-circle-graphic {
+    stroke: #cbd5e1 !important;
+}
+
 ::ng-deep .mdc-circular-progress__indeterminate-circle-graphic {
     stroke: black !important;
 }
@@ -5,4 +9,7 @@ button {
     ::ng-deep .mdc-circular-progress__indeterminate-circle-graphic {
         stroke: #475569 !important;
     }
+}
+::ng-deep body.dark button .mdc-circular-progress__indeterminate-circle-graphic {
+    stroke: #f1f5f9 !important;
 }

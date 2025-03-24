@@ -5,6 +5,7 @@ import { FireMessagingService } from './services/fire-messaging.service';
 import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../environments/environment';
 import { AuthService } from './services/auth.service';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -16,10 +17,12 @@ import { AuthService } from './services/auth.service';
 export class AppComponent {
   title = 'event-management';
   private messagingService = inject(FireMessagingService)
+  private themeService = inject(ThemeService)
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private auth: AuthService
   ) {
+    this.themeService.themeCheck()
     auth.getAuthState().subscribe({
       next:() => {
         if(isPlatformBrowser(this.platformId) && environment.production && auth.getuid() && !isDevMode()) {
