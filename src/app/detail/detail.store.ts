@@ -5,6 +5,7 @@ import { delay, map, Observable, switchMap, tap } from "rxjs";
 import { EventService } from "../services/event.service";
 import { tapResponse } from "@ngrx/operators";
 import { MessageService } from "../services/message.service";
+import { Router } from "@angular/router";
 
 interface Initialstate {
     loading: boolean,
@@ -29,6 +30,7 @@ export class DetailStore extends ComponentStore<Initialstate> {
     
     private eventService = inject(EventService);
     private messageService = inject(MessageService);
+    private router = inject(Router);
 
     private getEventData = this.effect((data$:Observable<string>) => {
         return data$.pipe(
@@ -44,10 +46,12 @@ export class DetailStore extends ComponentStore<Initialstate> {
                             } if (typeof data == 'string') {
                                 this.messageService.error(data)
                                 this.setLoading(false);
+                                this.router.navigateByUrl('/event/admin')
                             }
                         },
                         error: (err) => {
                             this.setLoading(false);
+                            this.router.navigateByUrl('/event/admin')
                         }
                     })
                 )
