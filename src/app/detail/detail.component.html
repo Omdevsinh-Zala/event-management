@@ -4,35 +4,37 @@
             <mat-spinner diameter="50"></mat-spinner>
         </div>
     } @else {
-        <div class="flex justify-between items-center">
-            <div class="flex flex-col items-start gap-4">
-                <h1 class="text-4xl dark:text-white" >{{ (eventData | async)![0].title }}</h1>
-                <div class="bg-slate-300 dark:bg-slate-600 dark:text-slate-50 bg-opacity-70 py-1 px-4 rounded-full flex justify-center items-center">
-                    <h2 class="text-xl"><span class="font-medium" >Destination:</span> {{ (eventData | async)![0].place }} </h2>
+        @if ((eventData | async)!.length > 0) {
+            <div class="flex justify-between items-center">
+                <div class="flex flex-col items-start gap-4">
+                    <h1 class="text-4xl dark:text-white" >{{ (eventData | async)![0].title }}</h1>
+                    <div class="bg-slate-300 dark:bg-slate-600 dark:text-slate-50 bg-opacity-70 py-1 px-4 rounded-full flex justify-center items-center">
+                        <h2 class="text-xl"><span class="font-medium" >Destination:</span> {{ (eventData | async)![0].place }} </h2>
+                    </div>
+                </div>
+                <div class="text-xl dark:text-white">
+                    <div class="bg-indigo-300 dark:bg-indigo-600 dark:text-cyan-50 bg-opacity-70 py-1 px-4 rounded-full flex justify-center items-center">
+                        <h2 class="text-xl" >{{ (eventData | async)![0].date | date: 'mediumDate' }}</h2>
+                    </div>
                 </div>
             </div>
-            <div class="text-xl dark:text-white">
-                <div class="bg-indigo-300 dark:bg-indigo-600 dark:text-cyan-50 bg-opacity-70 py-1 px-4 rounded-full flex justify-center items-center">
-                    <h2 class="text-xl" >{{ (eventData | async)![0].date | date: 'mediumDate' }}</h2>
+            <swiper-container class="py-5" speed="500" navigation="true" pagination="true">
+                @let num = [1,2,3,4,5];
+                @for(n of num; track n) {
+                    <swiper-slide class="h-[880px]">
+                        <img class="h-[880px] w-full object-cover px-9 object-center" [src]="(eventData | async)![0].image" alt="Event image" />
+                    </swiper-slide>
+                    
+                }
+            </swiper-container>
+            <div class="flex flex-col md:flex-row relative gap-2">
+                <div class="">
+                    <h2 class="text-xl dark:text-white static md:sticky top-2">
+                        Event description:
+                    </h2>
                 </div>
-            </div>
-        </div>
-        <swiper-container class="py-5" speed="500" navigation="true" pagination="true">
-            @let num = [1,2,3,4,5];
-            @for(n of num; track n) {
-                <swiper-slide class="h-[880px]">
-                    <img class="h-[880px] w-full object-cover px-9 object-center" [src]="(eventData | async)![0].image" alt="Event image" />
-                </swiper-slide>
-                
-            }
-        </swiper-container>
-        <div class="flex flex-col md:flex-row relative gap-2">
-            <div class="">
-                <h2 class="text-xl dark:text-white static md:sticky top-2">
-                    Event description:
-                </h2>
-            </div>
-            <div class="text-lg dark:text-white whitespace-pre-line">{{ (eventData | async)![0].description }}</div>
-        </div>  
+                <div class="text-lg dark:text-white whitespace-pre-line">{{ (eventData | async)![0].description }}</div>
+            </div>  
+        }
     }
 </div>
