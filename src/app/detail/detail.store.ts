@@ -41,7 +41,6 @@ export class DetailStore extends ComponentStore<Initialstate> {
                     tapResponse({
                         next: (data) => {
                             if(data && typeof data !== 'string') {
-                                console.log(data)
                                 this.setData([data])
                                 this.setLoading(false);
                             } if (typeof data == 'string') {
