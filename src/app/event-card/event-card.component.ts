@@ -8,10 +8,11 @@ import { FireStoreService } from '../services/fire-store.service';
 import { delay, ReplaySubject } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { DocumentData } from '@angular/fire/firestore';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-event-card',
-  imports: [DatePipe, MatIconModule, CommonModule, AsyncPipe, MatProgressSpinner],
+  imports: [DatePipe, MatIconModule, CommonModule, AsyncPipe, MatProgressSpinner, RouterLink],
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

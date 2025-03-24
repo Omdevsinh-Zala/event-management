@@ -21,7 +21,7 @@
                                 </div>
                                 <span class="bg-rose-100 rounded-2xl py-1 px-2 sm:py-1 sm:px-3 text-xs sm:text-md w-max"><b class="font-medium">Place:</b> {{ event!.place }}</span>
                             </div>
-                            <p class="h-full dark:text-white">
+                            <p class="h-full dark:text-white whitespace-pre-line max-h-19 overflow-hidden text-ellipsis line-clamp-3">
                                 {{ event!.description }}
                             </p>
                             @if (isRegistered(event.participants) && !((registerEventId$ | async) == id && (registerEventLoading$ | async))) {
