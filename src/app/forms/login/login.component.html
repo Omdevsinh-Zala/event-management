@@ -7,9 +7,10 @@
 <div class="container mx-auto px-2 sm:px-0 w-full h-full flex flex-col gap-4 items-center justify-center">
   <form class="p-3 w-96 flex gap-4 flex-col" [formGroup]="loginForm()">
     <button
-      class="transition-colors duration-200 h-[46px] w-full flex items-center px-4 py-2 border rounded-md hover:border-slate-400"
+      class="transition-colors duration-200 h-[46px] w-full flex items-center px-4 py-2 border rounded-md hover:border-slate-400 dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:border-slate-300 disabled:opacity-70 hover:disabled:cursor-not-allowed"
       type="button"
       role="button"
+      [disabled]="(isSigninProgress | async)"
       (click)="loginWithGmail()"
     >
     @if (gmailLoading$ | async) {
@@ -48,14 +49,14 @@
     }
     </button>
     <div class="w-full relative text-center">
-      <hr class="absolute border-black left-0 right-0 top-1/2 -z-10" />
-      <span class="text-black bg-white px-1">or</span>
+      <hr class="absolute border-black left-0 right-0 top-1/2 -z-10 dark:border-white dark:z-0" />
+      <span class="text-black bg-white dark:bg-gray-950 dark:text-white px-1 dark:relative">or</span>
     </div>
-    <h1 class="mx-auto text-3xl">Login</h1>
+    <h1 class="mx-auto text-3xl dark:text-white">Login</h1>
     <div class="flex flex-col gap-7 w-full">
       <div class="relative">
         <input
-          class="transition-all duration-200 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-2 focus:ring-slate-200"
+          class="transition-all duration-200 peer outline-none border dark:text-white dark:bg-slate-800 focus:border-slate-400 dark:focus:border-slate-300 w-full rounded-md p-3 focus:ring-2 focus:ring-slate-200 dark:focus:ring-slate-100"
           formControlName="email"
           type="email"
           autocomplete="new-password"
@@ -86,13 +87,13 @@
       </div>
       <div class="relative">
         <input
-          class="transition-all duration-200 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-2 focus:ring-slate-200"
+          class="transition-all duration-200 peer outline-none border dark:text-white dark:bg-slate-800 focus:border-slate-400 dark:focus:border-slate-300 w-full rounded-md p-3 focus:ring-2 focus:ring-slate-200 dark:focus:ring-slate-100"
           formControlName="password"
           autocomplete="new-password"
           [type]="showPassword() ? 'text' : 'password'"
           #password
         />
-        <button class="transition-all duration-200 absolute right-2 top-1/2 -translate-y-3" type="button" (click)="showPassword.set(!showPassword())" role="button" ><mat-icon>{{ showPassword() ? "visibility" : "visibility_off" }}</mat-icon></button>
+        <button class="transition-all duration-200 absolute right-2 top-1/2 -translate-y-3" type="button" (click)="showPassword.set(!showPassword())" role="button" ><mat-icon class="dark:text-white" >{{ showPassword() ? "visibility" : "visibility_off" }}</mat-icon></button>
         <label
           class="label"
           [ngClass]="
@@ -123,7 +124,7 @@
         }
       </div>
       <button
-        class="transition-all duration-200 border h-[42px] rounded-md py-2 text-black border-slate-400 bg-slate-200 hover:bg-slate-300 hover:disabled:cursor-not-allowed"
+        class="transition-all duration-200 border h-[42px] dark:text-white dark:bg-slate-500 dark:hover:bg-slate-600 rounded-md py-2 text-black border-slate-400 bg-slate-200 hover:bg-slate-300 hover:disabled:cursor-not-allowed"
         type="button"
         role="button"
         (click)="submit()"
@@ -138,5 +139,5 @@
       </button>
     </div>
   </form>
-  <p class="text-md opacity-70">Not registerd?<a class="transition-colors duration-200 ps-1 hover:text-slate-500" routerLink="/register" >Sign up here</a></p>
+  <p class="text-md opacity-70 dark:opacity-90 dark:text-white">Not registerd?<a class="transition-colors duration-200 ps-1 hover:text-slate-500" routerLink="/register" >Sign up here</a></p>
 </div>
