@@ -8,7 +8,7 @@ import { from, ReplaySubject } from 'rxjs';
 })
 export class EventService {
   private db:Database;
-  private path = 'events';
+  private readonly path = 'events';
   private eventsData = new ReplaySubject<{[key: string]: EventData} | null>();
   private eventsData$ = this.eventsData.asObservable()
   
@@ -42,5 +42,21 @@ export class EventService {
     const pathRef = this.path + `/${id}`;
     const dataRef = ref(this.db, pathRef);
     return from(remove(dataRef));
+  }
+
+  getEvent(id: string) {
+    const eventData = new ReplaySubject< EventData | string>();
+    const databaseRef = ref(this.db, this.path + `/${id}`);
+    const newRef = query(databaseRef);
+    onValue(newRef, (snapshot) => {
+      if(snapshot.exists()) {
+        eventData.next(snapshot.val())
+      } else {
+        eventData.next(`No Event is associated with ${id}`)
+      }
+    }, (err) => {
+      eventData.next(err.message)
+    })
+    return eventData.asObservable();
   }
 }
