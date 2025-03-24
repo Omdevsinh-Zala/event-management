@@ -1,8 +1,8 @@
-<div class="flex flex-col gap-4 fixed right-3 top-3 z-40">
-    <div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4 fixed right-3 top-3 z-40 items-end">
+    <div class="flex flex-col gap-4 w-max">
         @for (message of service.successMes(); track $index) {
             @if (message) {
-                <div class="text-[15px] flex gap-2 items-center justify-center border border-emerald-400 bg-white text-black px-3 md:px-6 font-medium shadow-lg py-1 md:py-3 text-md rounded-md h-[50px]" [@slideIn]="service.successMes.length">
+                <div class="text-[15px] flex gap-2 items-center justify-start border border-emerald-400 bg-white text-black dark:bg-gray-800 dark:text-emerald-300 px-3 md:px-6 font-medium shadow-lg py-1 md:py-3 text-md rounded-md h-[50px] dark:shadow-slate-500 dark:shadow-md" [@slideIn]="service.successMes.length">
                     <span class="material-symbols-outlined text-emerald-500 text-base md:text-xl">
                         check_circle
                         </span>{{ message }}
@@ -10,10 +10,10 @@
             }
         }
     </div>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 w-max">
         @for (message of service.warnMes(); track $index) {
             @if (message) {
-                <div class="text-[15px] flex gap-2 items-center justify-center border border-yellow-400 bg-white text-black px-3 md:px-6 font-medium shadow-lg py-1 md:py-3 text-md rounded-md h-[50px]" [@slideIn]="service.successMes.length">
+                <div class="text-[15px] flex gap-2 items-center justify-start border border-yellow-400 bg-white text-black dark:bg-gray-800 dark:text-yellow-300 px-3 md:px-6 font-medium shadow-lg py-1 md:py-3 text-md rounded-md h-[50px] dark:shadow-slate-500 dark:shadow-md" [@slideIn]="service.successMes.length">
                     <span class="material-symbols-outlined text-yellow-500 text-base md:text-xl">
                         warning
                         </span>{{ message }}
@@ -21,10 +21,10 @@
             }
         }
     </div>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 w-max">
         @for (error of service.errorMes(); track $index) {
             @if (error) {
-                <div class="text-[15px] flex gap-2 items-center justify-center border border-pink-400 bg-white text-black px-3 md:px-6 font-medium shadow-lg py-1 md:py-3 text-md rounded-md h-[50px]" [@slideIn]="service.errorMes.length">
+                <div class="text-[15px] flex gap-2 items-center justify-start border border-pink-400 bg-white text-black dark:bg-gray-800 dark:text-pink-300 px-3 md:px-6 font-medium shadow-lg py-1 md:py-3 text-md rounded-md h-[50px] dark:shadow-slate-500 dark:shadow-md" [@slideIn]="service.errorMes.length">
                     <span class="material-symbols-outlined text-pink-500 text-base md:text-xl">
                         error
                         </span>{{ error }}
