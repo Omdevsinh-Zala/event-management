@@ -33,6 +33,11 @@ export const routes: Routes = [
         ]
     },
     {
+        path: ':id',
+        loadComponent: () => import('./detail/detail.component').then((m) => m.DetailComponent),
+        canActivate:[adminGuard]
+    },
+    {
         path: '',
         pathMatch: 'full',
         redirectTo: '/login'
