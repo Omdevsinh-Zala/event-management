@@ -74,3 +74,8 @@ body {
 html:has(.class) {
   overflow: hidden;
 }
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(100%) brightness(200%);;
+  cursor: pointer;
+}
