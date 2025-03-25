@@ -10,23 +10,25 @@
                     @let date = event.date;
                     @let id = (eventsId$ | async)![$index];
                     @if (isFuterEvent(date)) {
-                        <div class="group relative border-slate-200 rounded-lg p-2 shadow-lg h-fullhover:shadow-xl flex flex-col gap-3 transition-shadow duration-300 hover:cursor-pointer selection:select-none border overflow-hidden hover:shadow-xl dark:bg-slate-800 dark:border-slate-500" tabindex="0">
-                            <h3 class="text-2xl dark:text-white">{{ event!.title }}</h3>
+                        <a class="group relative border-slate-200 rounded-lg p-2 shadow-lg h-full flex flex-col gap-3 transition-shadow duration-300 hover:cursor-pointer selection:select-none border overflow-hidden hover:shadow-xl dark:bg-slate-800 dark:border-slate-500" tabindex="0" [routerLink]="'/' + id">
+                            <div class="h-auto" >
+                                <h3 class="text-2xl dark:text-white line-clamp-1 text-ellipsis max-w-80">{{ event!.title }}</h3>
+                            </div>
                             <div class="relative w-full overflow-hidden pb-72">
                                 <img class="absolute top-0 left-0 w-full h-full object-cover rounded-md" [src]="event!.image" />
                             </div>
                             <div class="flex justify-between items-center">
-                                <div class="bg-slate-100 rounded-2xl py-1 px-2 sm:py-1 sm:px-3 text-xs sm:text-md flex items-center gap-1 justify-start w-max">
+                                <div class="bg-slate-100 rounded-2xl py-1 px-2 sm:py-1 sm:px-3 text-xs sm:text-md flex items-center gap-1 justify-start w-auto md:w-max">
                                     <mat-icon class="text-xs sm:text-md !flex !items-center !justify-center" >date_range</mat-icon>{{ event!.date | date:'fullDate' }}
                                 </div>
-                                <span class="bg-rose-100 rounded-2xl py-1 px-2 sm:py-1 sm:px-3 text-xs sm:text-md w-max"><b class="font-medium">Place:</b> {{ event!.place }}</span>
+                                <span class="bg-rose-100 rounded-2xl py-1 px-2 sm:py-1 sm:px-3 text-xs sm:text-md w-auto md:w-max line-clamp-1 leading-6 max-w-56 text-ellipsis"><b class="font-medium">Place:</b> {{ event!.place }}</span>
                             </div>
-                            <p class="h-full dark:text-white whitespace-pre-line max-h-19 overflow-hidden text-ellipsis line-clamp-3">
+                            <p class="h-full dark:text-white whitespace-pre-line max-h-[70px] overflow-hidden text-ellipsis line-clamp-3">
                                 {{ event!.description }}
                             </p>
                             @if (isRegistered(event.participants) && !((registerEventId$ | async) == id && (registerEventLoading$ | async))) {
                             } @else {
-                                <button class="transition-all duration-300 border border-slate-400 dark:border-slate-500 dark:bg-slate-600 dark:hover:bg-slate-700 dark:text-slate-50 bg-slate-100 text-slate-500 hover:bg-slate-200 active:ring-slate-200 active:ring-4 rounded-full self-start py-2 px-6 flex justify-center items-center w-28 min-h-[42px]" (click)="registerUser(event, id)" >
+                                <button class="transition-all duration-300 border border-slate-400 dark:border-slate-500 dark:bg-slate-600 dark:hover:bg-slate-700 dark:text-slate-50 bg-slate-100 text-slate-500 hover:bg-slate-200 active:ring-slate-200 active:ring-4 rounded-full self-start py-2 px-6 flex justify-center items-center w-28 min-h-[42px]" (click)="registerUser(event, id); $event.preventDefault(); $event.stopPropagation();" >
                                     @if ((registerEventId$ | async) == id && (registerEventLoading$ | async)) {
                                         <mat-spinner diameter="20" />
                                     } @else {
@@ -34,7 +36,7 @@
                                     }
                                 </button>
                             }
-                        </div>
+                        </a>
                     }
                 }
             } @else {

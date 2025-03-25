@@ -208,8 +208,8 @@
                                   <div class="absolute my-auto flex gap-2 2xl:gap-5 items-start w-full justify-between 2xl:justify-[unset] flex-col sm:flex-row sm:items-center">
                                       <button class="border border-slate-400 py-2 px-4 bg-slate-100 dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-600 hover:bg-slate-200 hover:cursor-pointer rounded-md mx-auto lg:mx-0">Upload image</button>
                                       @if(fileName()) {
-                                          <div class="relative w-full sm:w-1/2">
-                                              <p class="w-40 overflow-hidden whitespace-nowrap text-ellipsis" >{{fileName()}}</p>
+                                          <div class="relative w-full sm:w-1/2 dark:text-white">
+                                              <p class="w-40 overflow-hidden whitespace-nowrap text-ellipsis" >{{fileName() || 'Event Image'}}</p>
                                               <button class="absolute right-0 top-1/2 -translate-y-1/2 bg-transparent border-0 leading-none hover:text-red-500 transition-colors duration-300" (click)="clearUpload()" ><mat-icon>cancel</mat-icon></button>
                                           </div>
                                       }
