@@ -13,7 +13,7 @@ export class AdminEffects {
     openModel$ = createEffect((actions$ = inject(Actions)) => {
         return actions$.pipe(
             ofType(adminActions.openModel),
-            delay(100),
+            delay(300),
             map(() => adminActions.opneModuleCall())
         )
     });
@@ -22,7 +22,7 @@ export class AdminEffects {
     openUpdateModel$ = createEffect((actions$ = inject(Actions)) => {
         return actions$.pipe(
             ofType(adminActions.openUpdateEvent),
-            delay(100),
+            delay(300),
             map(() => adminActions.opneUpdateModuleCall())
         )
     });
