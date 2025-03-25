@@ -28,7 +28,9 @@
                             </p>
                             <div class="flex justify-between items-center dark:text-white">
                                 <p>Want to rollout from this event?</p>
-                                <button class="transition-all duration-300 border border-rose-400 bg-rose-50 dark:bg-rose-600 dark:text-rose-50 dark:border-rose-500 dark:hover:bg-rose-700 text-rose-500 hover:bg-rose-100 active:ring-rose-200 active:ring-4 rounded-full self-start py-2 px-6 flex justify-center items-center w-28 min-h-[42px]" (click)="unRegisterUser(event, id); $event.preventDefault(); $event.stopPropagation();" >
+                                <button class="transition-all duration-300 border border-rose-400 bg-rose-50 dark:bg-rose-600 dark:text-rose-50 dark:border-rose-500 dark:hover:bg-rose-700 text-rose-500 hover:bg-rose-100 active:ring-rose-200 active:ring-4 rounded-full self-start py-2 px-6 flex justify-center items-center w-28 min-h-[42px] disabled:hover:cursor-not-allowed"
+                                [disabled]="(unRegisterEventLoading$ | async)"
+                                (click)="unRegisterUser(event, id); $event.preventDefault(); $event.stopPropagation();" >
                                     @if ((unRegisterEventId$ | async) == id && (unRegisterEventLoading$ | async)) {
                                         <mat-spinner diameter="18" />
                                     } @else {

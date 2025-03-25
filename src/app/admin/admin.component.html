@@ -58,10 +58,10 @@
   </div>
   <h2 class="text-4xl py-4 dark:text-white">Events</h2>
   @if ((showModel$() | async) == true) {
-      <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black dark:bg-opacity-80 dark:bg-white transition-all duration-300 scale-0 z-40" [ngClass]="(showaddEventModel$() | async) ? 'scale-100 opacity-100 !visible' : ''">
+      <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black dark:bg-opacity-80 dark:bg-white !transition-all !duration-300 scale-0 z-40" [ngClass]="{'!opacity-100 !visible !scale-100': showaddEventModel$() | async }">
           <div class="relative w-dvw h-dvh" (click)=" (titleEmpty && imageEmpty && desEmpty && placeEmpty && dateEmpty) ? toggleModel() : ''">
             <div class="p-3 lg:p-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 lg:w-1/2 lg:h-2/3" (click)="$event.stopPropagation()">
-                <div class="relative flex flex-col gap-2 w-full h-full rounded-lg p-5 bg-white dark:bg-gray-950 transition-all duration-500 scale-0" [ngClass]="(showaddEventModel$() | async) ? 'scale-100' : ''">
+                <div class="relative flex flex-col gap-2 w-full h-full rounded-lg p-5 bg-white dark:bg-gray-950 !opacity-0 !transition-all !duration-700 !scale-0" [ngClass]="{ '!opacity-100 !scale-100': showaddEventModel$() | async }">
                     <h3 class="text-3xl dark:text-white">Add Event</h3>
                     <form class="py-3 px-8 flex flex-col gap-6 overflow-y-scroll custom-scrollbar" [formGroup]="eventForm()">
                         <div class="relative shrink-0">

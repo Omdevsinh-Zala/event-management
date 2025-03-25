@@ -32,9 +32,9 @@ export class AdminComponent implements OnInit {
   private message = inject(MessageService);
   searchEvent = signal('');
   //For event form
-  showModel$ = signal(this.store.select(selectModelCall));
-  showaddEventModel$ = signal(this.store.select(selectModelState));
-  modelOpen$ = signal(this.store.select(selectModuleLoading));
+  showModel$ = computed(() => this.store.select(selectModelCall));
+  showaddEventModel$ = computed(() => this.store.select(selectModelState));
+  modelOpen$ = computed(() => this.store.select(selectModuleLoading));
   //For update event form
   showUpdateModel$ = signal(this.store.select(selectUpdateModelCall));
   showUpdateEventModel$ = signal(this.store.select(selectUpdateModelState));
@@ -95,19 +95,19 @@ export class AdminComponent implements OnInit {
     //To get event data if avaiable
     // this.handleEventForm();
     //To listen and store event data in local storage
-    this.eventForm().valueChanges.subscribe({
-      next:(value) => {
-        const data: EventData = {
-          title: value.title,
-          image: this.base64ImageData() as string,
-          place: value.place,
-          description: value.description,
-          date: value.date,
-          participants: this.participants()
-        }
-        this.localStorage.setItem('EventDetails', JSON.stringify(data));
-      }
-    });
+    // this.eventForm().valueChanges.subscribe({
+    //   next:(value) => {
+    //     const data: EventData = {
+    //       title: value.title,
+    //       image: this.base64ImageData() as string,
+    //       place: value.place,
+    //       description: value.description,
+    //       date: value.date,
+    //       participants: this.participants()
+    //     }
+    //     this.localStorage.setItem('EventDetails', JSON.stringify(data));
+    //   }
+    // });
 
     //To toggle event form dialog
     if(this.model() == false) {

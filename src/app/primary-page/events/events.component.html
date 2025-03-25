@@ -28,7 +28,9 @@
                             </p>
                             @if (isRegistered(event.participants) && !((registerEventId$ | async) == id && (registerEventLoading$ | async))) {
                             } @else {
-                                <button class="transition-all duration-300 border border-slate-400 dark:border-slate-500 dark:bg-slate-600 dark:hover:bg-slate-700 dark:text-slate-50 bg-slate-100 text-slate-500 hover:bg-slate-200 active:ring-slate-200 active:ring-4 rounded-full self-start py-2 px-6 flex justify-center items-center w-28 min-h-[42px]" (click)="registerUser(event, id); $event.preventDefault(); $event.stopPropagation();" >
+                                <button class="transition-all duration-300 border border-slate-400 dark:border-slate-500 dark:bg-slate-600 dark:hover:bg-slate-700 dark:text-slate-50 bg-slate-100 text-slate-500 hover:bg-slate-200 active:ring-slate-200 active:ring-4 rounded-full self-start py-2 px-6 flex justify-center items-center w-28 min-h-[42px] disabled:hover:cursor-not-allowed"
+                                [disabled]="(registerEventLoading$ | async)"
+                                (click)="registerUser(event, id); $event.preventDefault(); $event.stopPropagation();" >
                                     @if ((registerEventId$ | async) == id && (registerEventLoading$ | async)) {
                                         <mat-spinner diameter="20" />
                                     } @else {
