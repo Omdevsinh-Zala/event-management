@@ -1,13 +1,13 @@
-export interface EventData {
-    title: string,
-    image: string,
-    place: string,
-    description: string,
-    date: string,
-    participants: string[]
-}
+// export interface EventData {
+//     title: string,
+//     image: string,
+//     place: string,
+//     description: string,
+//     date: string,
+//     participants: string[]
+// }
 
-export interface NewEventData {
+export interface EventData {
     title: string,
     bannerImage: string
     images: string[],
@@ -18,21 +18,21 @@ export interface NewEventData {
 }
 
 export interface DateType{
-    date: string[] | string,
+    date: string[],
     singleDay: boolean,
     multiDay: boolean,
     odd_eventDay: boolean
     everyMonthEvent: boolean,
     everyWeekEvent: boolean,
-    weekDay: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday'
+    weekDay: string[] | null
 }
 
-export const weekDay: readonly string[] = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
+export const weekDay: readonly { [key:string]: string }[] = [
+    { value: '0', day: 'Sunday'},
+    { value: '1', day: 'Monday'},
+    { value: '2', day: 'Tuesday'},
+    { value: '3', day: 'Wednesday'},
+    { value: '4', day: 'Thursday'},
+    { value: '5', day: 'Friday'},
+    { value: '6', day: 'Saturday'},
 ]

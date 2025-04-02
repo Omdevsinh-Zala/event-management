@@ -47,11 +47,11 @@ describe('HomeComponent', () => {
   it('should return true/false depending the date comparision of current and event date', () => {
     const date = new Date()
     const getTime = component.today.getTime = jest.fn().mockReturnValue(date)
-    const result_1 = component.isFuterEvent('2022-12-12');
+    const result_1 = component.isFuterEvent(['2022-12-12']);
     expect(getTime).toHaveBeenCalled()
     expect(result_1).toBe(false)
 
-    const result_2 = component.isFuterEvent('12-12-2025');
+    const result_2 = component.isFuterEvent(['12-12-2025']);
     expect(getTime).toHaveBeenCalled()
     expect(result_2).toBe(true)
   })
@@ -76,20 +76,38 @@ describe('HomeComponent', () => {
     const store = component['store'].updateEventsData = jest.fn()
     const data:EventData = { 
       title: '',
-      image: '',
-      description: '',
+      bannerImage: '',
+      images: [],
       place: '',
-      date: '',
+      description: '',
+      date: {
+        singleDay: true,
+        date: [],
+        everyMonthEvent: false,
+        everyWeekEvent: false,
+        multiDay: false,
+        odd_eventDay: false,
+        weekDay: []
+      },
       participants: ['123','24']
     };
     component['auth'].getuid = jest.fn().mockReturnValue('123');
     component.unRegisterUser(data, '234');
     const newData = {
       title: '',
-      image: '',
-      description: '',
+      bannerImage: '',
+      images: [],
       place: '',
-      date: '',
+      description: '',
+      date: {
+        singleDay: true,
+        date: [],
+        everyMonthEvent: false,
+        everyWeekEvent: false,
+        multiDay: false,
+        odd_eventDay: false,
+        weekDay: []
+      },
       participants: ['24']
     }
     expect(store).toHaveBeenCalledWith('234', newData)

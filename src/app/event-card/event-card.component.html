@@ -1,23 +1,44 @@
 @if (typeof event() !== 'undefined') {
-    <div class="group relative border-slate-200 rounded-lg p-2 shadow-lg h-full flex flex-col gap-3 transition-shadow duration-300 hover:cursor-pointer selection:select-none border overflow-visible dark:bg-slate-800 dark:border-slate-500" tabindex="0" [ngClass]="isFuterEvent(event()!.date) ? '' : 'bg-red-100 dark:!bg-red-500 !border-red-200 dark:!border-red-200 hover:!shadow-rose-200 dark:hover:!shadow-rose-200'" (click)="$event.target === $event.currentTarget && divRef.focus()" #divRef>
-        <div class="absolute flex items-center gap-3 -top-6 opacity-0 group-hover:opacity-100 group-hover:top-2 transition-all duration-300 right-2 group-focus:opacity-100 group-focus:top-2">
+    <div class="group relative border-slate-200 rounded-lg p-2 shadow-lg h-full flex flex-col gap-3 transition-shadow duration-300 hover:cursor-pointer selection:select-none border overflow-visible dark:bg-slate-800 dark:border-slate-500" tabindex="0" [ngClass]="isFuterEvent(event()!.date.date) ? '' : 'bg-red-100 dark:!bg-red-500 !border-red-200 dark:!border-red-200 hover:!shadow-rose-200 dark:hover:!shadow-rose-200'" (click)="$event.target === $event.currentTarget && divRef.focus()" #divRef>
+        <div class="absolute flex items-center gap-3 -top-6 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto group-hover:top-2 transition-all duration-300 right-2 group-focus:opacity-100 group-focus:top-2">
             <a class="rounded-xl border flex justify-center items-center leading-none bg-amber-50 hover:bg-amber-100 border-amber-400 dark:bg-amber-500 dark:border-amber-400 dark:hover:bg-amber-600 sm:p-2 p-1 transition-colors duration-300" [routerLink]="['/' + eventId()]"><mat-icon class="text-amber-400 dark:text-amber-50" target="_blank" >details</mat-icon></a>
-            @if (isFuterEvent(event()!.date)) {
+            @if (isFuterEvent(event()!.date!.everyWeekEvent! ? event()?.date?.weekDay! : event()!.date.date)) {
                 <button class="rounded-xl border flex justify-center items-center leading-none bg-blue-50 hover:bg-blue-100 border-blue-400 dark:bg-blue-500 dark:border-blue-400 dark:hover:bg-blue-600 sm:p-2 p-1 transition-colors duration-300" [disabled]="targetId == eventId" (click)="editEvent.emit(eventId()!)"><mat-icon class="text-blue-400 dark:text-blue-50" >edit</mat-icon></button>
             }
             <button class="rounded-xl border flex justify-center items-center leading-none bg-rose-50 hover:bg-rose-100 border-rose-400 dark:bg-rose-500 dark:border-rose-400 dark:hover:bg-rose-600 sm:p-2 p-1 transition-colors duration-300" [disabled]="targetId == eventId" (click)="deleteEvent.emit(eventId()!)"><mat-icon class="text-rose-400 dark:text-rose-50" >delete</mat-icon></button>
         </div>
-        <div class="h-auto">
-            <h3 class="text-2xl dark:text-white line-clamp-1 max-w-80 text-ellipsis">{{ event()!.title }}</h3>
+        <div class="bg-slate-100 rounded-2xl py-1 px-2 sm:py-1 sm:px-3 text-sm sm:text-base flex items-center gap-1 justify-start w-auto md:w-max overflow-hidden">
+            @switch (true || false) {
+                @case (event()?.date?.singleDay) {
+                    <mat-icon class="text-xs sm:text-base !flex !items-center !justify-center" >date_range</mat-icon>{{ event()!.date.date[0] | date:'fullDate' }}
+                }
+                @case (event()?.date?.multiDay) {
+                    <mat-icon class="text-xs sm:text-base !flex !items-center !justify-center" >date_range</mat-icon>{{ event()!.date.date[0] | date:'mediumDate' }}
+                    <span>to</span>
+                    <mat-icon class="text-xs sm:text-base !flex !items-center !justify-center" >date_range</mat-icon>{{ event()!.date.date[1] | date:'mediumDate' }}
+                }
+                @case (event()?.date?.everyWeekEvent) {
+                    <h4 class="w-auto md:w-max line-clamp-1 leading-6 max-w-max text-ellipsis" >Every
+                    @for (week of event()?.date?.weekDay; track $index) {
+                        @let day = getWeekDay(week);
+                        {{ event()?.date?.weekDay!.length > 2 && $last ? 'and ' : $first ? '' : ', ' }}{{ day[0]['day'] }}
+                    }
+                    </h4>
+                }
+                @case (event()?.date?.everyMonthEvent) {
+                    @let date = (event()!.date.date[0] | date:'shortDate')!.split('/')[1];
+                    <span>Every</span><span>{{ (date == '1' ? '1st': date == '2' ? '2nd' : date == '3' ? '3rd' : (date + 'th'))  + ' of month' }}</span>
+                }
+            }
+        </div>
+        <div class="flex justify-between items-center">
+            <h3 class="text-2xl dark:text-white w-auto md:w-max line-clamp-1 leading-6 max-w-max text-ellipsis">{{ event()!.title }}</h3>
         </div>
         <div class="relative w-full overflow-hidden pb-72">
-            <img class="absolute top-0 left-0 w-full h-full object-cover rounded-md" [src]="event()!.image" />
+            <img class="absolute top-0 left-0 w-full h-full object-cover rounded-md" [src]="event()!.bannerImage" />
         </div>
-        <div class="flex justify-between items-center gap-5">
-            <div class="bg-slate-100 rounded-2xl py-1 px-2 sm:py-1 sm:px-3 text-sm sm:text-md flex items-baseline gap-1 justify-start w-auto md:w-max">
-                <mat-icon class="text-xs sm:text-md !flex !items-center !justify-center" >date_range</mat-icon><span>{{ event()!.date | date:'fullDate' }}</span>
-            </div>
-            <span class="bg-rose-100 rounded-2xl py-1 px-2 sm:py-1 sm:px-3 text-sm sm:text-md w-auto md:w-max line-clamp-1 leading-6 max-w-56 text-ellipsis"><b class="font-medium">Place:</b> {{ event()!.place }}</span>
+        <div class="flex justify-between items-center">
+            <span class="bg-rose-100 rounded-2xl py-1 px-2 sm:py-1 sm:px-3 text-sm sm:text-base w-auto md:w-max line-clamp-1 leading-6 max-w-max text-ellipsis"><b class="font-medium">Place:</b> {{ event()!.place }}</span>
         </div>
         <p class="h-full dark:text-white whitespace-pre-line max-h-[70px] overflow-hidden text-ellipsis line-clamp-3">
             {{ event()!.description }}
@@ -60,7 +81,7 @@
                             @for (participant of (usersData$ | async)!; track $index) {
                                 <li class="py-2">
                                     <div class="flex flex-col dark:text-white">
-                                        <h3 class="text-md lg:text-lg capitalize" >{{ participant['email'].split('@')[0] }}</h3>
+                                        <h3 class="text-base lg:text-lg capitalize" >{{ participant['email'].split('@')[0] }}</h3>
                                         <p class="text-xs lg:text-sm opacity-80" >{{ participant['email'] }}</p>
                                     </div>
                                 </li>

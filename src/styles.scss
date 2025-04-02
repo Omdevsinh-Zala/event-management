@@ -2,19 +2,47 @@
 // For more information: https://material.angular.io/guide/theming
 @use "@angular/material" as mat;
 
-html {
-  @include mat.theme(
-    (
-      color: (
-        theme-type: light,
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
-} /* You can add global styles to this file, and also import other style files */
+:root {
+  @include mat.radio-overrides((
+    selected-focus-icon-color: #64748b,
+    selected-hover-icon-color: #64748b,
+    selected-icon-color: #64748b,
+    selected-pressed-icon-color: #64748b,
+    ripple-color: #cbd5e1,
+    unselected-hover-icon-color: #cbd5e1,
+    label-text-color: #000
+  ));
+}
+
+:root .dark {
+  @include mat.radio-overrides((
+    label-text-color: #fff
+  ));
+}
+
+:root {
+  @include mat.checkbox-overrides((
+    selected-focus-icon-color: #64748b,
+    selected-hover-icon-color: #64748b,
+    selected-icon-color: #64748b,
+    selected-pressed-state-layer-color: #64748b,
+    selected-focus-state-layer-color: #64748b,
+    selected-hover-state-layer-color: #64748b,
+    selected-checkmark-color: #fff,
+    selected-pressed-icon-color: #64748b,
+    unselected-hover-icon-color: #cbd5e1,
+    label-text-color: #000
+  ));
+}
+
+:root .dark {
+  @include mat.checkbox-overrides((
+    selected-checkmark-color: #000,
+    label-text-color: #fff
+  ));
+}
+
+/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -78,4 +106,8 @@ html:has(.class) {
 .dark input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(100%) brightness(200%);;
   cursor: pointer;
+}
+
+::ng-deep .mat-mdc-radio-button .mat-internal-form-field {
+  color: unset;
 }

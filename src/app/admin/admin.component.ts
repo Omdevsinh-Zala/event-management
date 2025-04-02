@@ -6,10 +6,14 @@ import { Store } from '@ngrx/store';
 import { selectEventData, selectEventId, selectEventLoading, selectEventsData, selectEventsIdData, selectLoading, selectModelCall, selectModelState, selectModuleLoading, selectUpdateModelCall, selectUpdateModelState, selectUpdateModuleLoading } from './store/admin.reducer';
 import { adminActions } from './store/admin.actions';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { EventData } from './module';
+import { EventData, weekDay } from './module';
 import { MessageService } from '../services/message.service';
 import { LocalstorageService } from '../services/localstorage.service';
 import { EventCardComponent } from '../event-card/event-card.component';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { single } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
@@ -20,11 +24,27 @@ import { EventCardComponent } from '../event-card/event-card.component';
     FormsModule,
     AsyncPipe,
     MatProgressSpinnerModule,
-    EventCardComponent
+    EventCardComponent,
+    MatRadioModule,
+    MatCheckboxModule
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations:[
+    trigger('bubleUp',
+      [
+        transition(':enter', [
+          style({ opacity: 0, scale: 0 }),
+          animate('300ms ease-in', style({ opacity:1, scale: 1 }))
+        ], { delay: '300ms' }),
+        transition(':leave', [
+          style({ opacity:1, scale: 1 }),
+          animate('300ms ease-in', style({ opacity:0, scale:0 }))
+        ], { delay: '300ms' })
+      ]
+    )
+  ]
 })
 export class AdminComponent implements OnInit {
   store = inject(Store);
@@ -46,9 +66,11 @@ export class AdminComponent implements OnInit {
   imageFile:WritableSignal<File | null> = signal(null);
   formSubmit$ = signal(this.store.select(selectLoading));
   space = signal(500)
+  eventImages: WritableSignal<string[]> = signal([])
 
   //File input html tag refrence
   @ViewChild('file') file !: ElementRef<HTMLInputElement>;
+  @ViewChild('images') images !: ElementRef<HTMLInputElement>;
   eventData$ = signal(this.store.select(selectEventsData));
   eventLoading$ = signal(this.store.select(selectEventLoading));
 
@@ -60,12 +82,15 @@ export class AdminComponent implements OnInit {
 
   //To store base 64 image formate
   base64ImageData: WritableSignal<null | string | unknown> = signal(null);
+  base64ImagesData: WritableSignal<null[] | string[] | unknown[]> = signal([]);
 
   //To use local storage
   localStorage = inject(LocalstorageService);
 
   //eventIdFor updating/deleting
   eventId$ = this.store.select(selectEventId);
+
+  weekDays = signal(weekDay)
 
   todayDate = new Date().toISOString().split("T")[0];
 
@@ -89,6 +114,7 @@ export class AdminComponent implements OnInit {
         this.space.update(() => 500);
       }
     })
+    this.minForLastDay()
   }
 
   toggleModel() {
@@ -130,12 +156,11 @@ export class AdminComponent implements OnInit {
             image: '',
             place: data[0].place,
             description: data[0].description,
-            date: data[0].date
           });
           //Set image and file name
-          if( data[0].image && (data[0].image !== '' || data[0].image !== null)) {
+          if( data[0].bannerImage && (data[0].bannerImage !== '' || data[0].bannerImage !== null)) {
             const fileName = this.localStorage.getItem('ImageName');
-            const file = this.base64ToFile(data[0].image, fileName!);
+            const file = this.base64ToFile(data[0].bannerImage, fileName!);
             this.imageFile.update(() => file);
             this.fileName.update(() => fileName!);
             this.fileImage.update(() => URL.createObjectURL(file!));
@@ -159,10 +184,32 @@ export class AdminComponent implements OnInit {
       image: ['',[Validators.required]],
       place: ['',[Validators.required]],
       description: ['',[Validators.required]],
-      date: ['',[Validators.required]],
+      type:['',[Validators.required]],
       // participants: [[''],[]]
     })
   );
+
+  //Single day event form
+  singleDayEvent: Signal<FormGroup> = computed(() =>
+    this.fb.group({
+      date: ['',[Validators.required]]
+    })
+  )
+  //Multiple day event form
+  multyDayEvent: Signal<FormGroup> = computed(() =>
+    this.fb.group({
+      firstDay: ['',[Validators.required]],
+      secondDay: ['',[Validators.required]]
+    })
+  )
+  //Weekly event form
+  weekDaysData: WritableSignal<string[]> = signal([])
+  //Monthly event form
+  monthEvent: Signal<FormGroup> = computed(() =>
+    this.fb.group({
+      days: ['',[Validators.required]]
+    })
+  ) 
 
   //update-event form
   updateEventForm: Signal<FormGroup> = computed(() => 
@@ -171,26 +218,58 @@ export class AdminComponent implements OnInit {
       image: ['',[Validators.required]],
       place: ['',[Validators.required]],
       description: ['',[Validators.required]],
-      date: ['',[Validators.required]],
+      type: ['',Validators.required]
       // participants: [[''],[]]
     })
   );
 
+    //Update Single day event form
+    updateSingleDayEvent: Signal<FormGroup> = computed(() =>
+      this.fb.group({
+        date: ['',[Validators.required]]
+      })
+    )
+    //Update Multiple day event form
+    updateMultyDayEvent: Signal<FormGroup> = computed(() =>
+      this.fb.group({
+        firstDay: ['',[Validators.required]],
+        secondDay: ['',[Validators.required]]
+      })
+    )
+    //Update Weekly event form
+    updateWeekDaysData: WritableSignal<string[]> = signal([])
+    //Update Monthly event form
+    updateMonthEvent: Signal<FormGroup> = computed(() =>
+      this.fb.group({
+        days: ['',[Validators.required]]
+      })
+    ) 
+
   //Input image file to html and store it.
-  async uploadFile(e: Event) {
+  async uploadFile(e: Event, type: 'Banner' | 'Event') {
     const inputElement = e.target as HTMLInputElement;
     if(inputElement.files) {
-      const selectedFiles = Array.from(inputElement.files);
-      this.imageFile.update(() => selectedFiles[0])
-      this.fileName.update(() => selectedFiles[0].name);
-      this.fileImage.update(() => URL.createObjectURL(selectedFiles[0]));
-      this.base64ImageData.set(await this.imageConvert(selectedFiles[0])!);
-      this.localStorage.setItem('ImageName', this.fileName());
-      let data = JSON.parse(this.localStorage.getItem('EventDetails') || '[]');
-      if(data) {
-        data.image = this.base64ImageData();
+      if(type == 'Banner') {
+        const selectedFiles = Array.from(inputElement.files);
+        this.imageFile.update(() => selectedFiles[0])
+        this.fileName.update(() => selectedFiles[0].name);
+        this.fileImage.update(() => URL.createObjectURL(selectedFiles[0]));
+        this.base64ImageData.set(await this.imageConvert(selectedFiles[0])!);
+        this.localStorage.setItem('ImageName', this.fileName());
+        let data = JSON.parse(this.localStorage.getItem('EventDetails') || '[]');
+        if(data) {
+          data.image = this.base64ImageData();
+        }
+        this.localStorage.setItem('EventDetails', JSON.stringify(data));
+      } else {
+        const selectedFiles = Array.from(inputElement.files);
+        selectedFiles.forEach(async (e) => {
+          this.eventImages.update((images) => [...images, URL.createObjectURL(e)]);
+          const data = await this.imageConvert(e)
+          this.base64ImagesData.update((images) => [...images, data]);
+        })
+        this.images.nativeElement.value = ''
       }
-      this.localStorage.setItem('EventDetails', JSON.stringify(data));
     }
   }
 
@@ -211,7 +290,30 @@ export class AdminComponent implements OnInit {
       if(data) {
         data.image = null;
       }
-      this.localStorage.setItem('EventDetails', JSON.stringify(data));
+    this.localStorage.setItem('EventDetails', JSON.stringify(data));
+    //For event images
+    this.base64ImagesData.update(() => [])
+    this.eventImages.update(() => [])
+  }
+
+  weekSelection(value: string) {
+    this.weekDaysData.update((data => {
+      if(data.includes(value)) {
+        return data.filter((week) => week != value)
+      } else {
+        return [...data, value]
+      }
+    }))
+  }
+
+  updateWeekSelection(value: string) {
+    this.updateWeekDaysData.update((data => {
+      if(data.includes(value)) {
+        return data.filter((week) => week != value)
+      } else {
+        return [...data, value]
+      }
+    }))
   }
 
   //Submit event data
@@ -226,16 +328,40 @@ export class AdminComponent implements OnInit {
     }
     setTimeout(() => {
       const data: EventData = {
-        title: this.eventForm().get('title')?.value,
-        image: this.base64ImageData() as string,
-        place: this.eventForm().get('place')?.value,
-        description: this.eventForm().get('description')?.value,
-        date: this.eventForm().get('date')?.value,
+        title: this.eventForm().get('title')?.value.trim(),
+        bannerImage: this.base64ImageData() as string,
+        images: this.base64ImagesData() as string[],
+        place: this.eventForm().get('place')?.value.trim(),
+        description: this.eventForm().get('description')?.value.trim(),
+        date: {
+          singleDay: this.eventForm().get('type')?.value == '1' ? true : false,
+          multiDay: this.eventForm().get('type')?.value == '2' ? true : false,
+          everyWeekEvent: this.eventForm().get('type')?.value == '3' ? true : false,
+          everyMonthEvent: this.eventForm().get('type')?.value == '4' ? true : false,
+          date: this.getDate(),
+          weekDay: this.eventForm().get('type')?.value == '3' ? this.weekDaysData() : null,
+          odd_eventDay: false
+        },
         participants: this.participants()
       }
       this.store.dispatch(adminActions.submitData({ data: data }));
       this.eventForm().reset();
     },500);
+  }
+
+  getDate(): string[] {
+    switch(this.eventForm().get('type')?.value) {
+      case '1':
+        return [this.singleDayEvent().get('date')?.value];
+      case '2':
+        return [this.multyDayEvent().get('firstDay')?.value, this.multyDayEvent().get('secondDay')?.value];
+      case '3':
+        return this.weekDaysData();
+      case '4':
+        return [this.monthEvent().get('days')?.value];
+      default:
+      return [];
+    }
   }
 
   //Convert File to base64 
@@ -279,6 +405,48 @@ export class AdminComponent implements OnInit {
     })
   }
 
+  typeChange(event: MatRadioChange) {
+    const data = event.value
+    if(data == '1') {
+      this.monthEvent().reset()
+      this.weekDaysData.set([])
+      this.multyDayEvent().reset()
+    } else if( data == '2') {
+      this.monthEvent().reset()
+      this.weekDaysData.set([])
+      this.singleDayEvent().reset()
+    } else if (data == '3') {
+      this.singleDayEvent().reset()
+      this.multyDayEvent().reset()
+      this.monthEvent().reset()
+    } else {
+      this.singleDayEvent().reset();
+      this.multyDayEvent().reset();
+      this.weekDaysData.set([])
+    }
+  }
+
+  updateTypeChanges(event: MatRadioChange) {
+    const data = event.value
+    if(data == '1') {
+      this.updateMonthEvent().reset()
+      this.updateWeekDaysData.set([])
+      this.updateMultyDayEvent().reset()
+    } else if( data == '2') {
+      this.updateMonthEvent().reset()
+      this.updateWeekDaysData.set([])
+      this.updateSingleDayEvent().reset()
+    } else if (data == '3') {
+      this.updateSingleDayEvent().reset()
+      this.updateMultyDayEvent().reset()
+      this.updateMonthEvent().reset()
+    } else {
+      this.updateSingleDayEvent().reset();
+      this.updateMultyDayEvent().reset();
+      this.updateWeekDaysData.set([])
+    }
+  }
+
   //Convert base64 image to File
   base64ToFile(base64: string, fileName: string) {
     if(base64 && base64 !== '' && base64 !== null) {
@@ -294,8 +462,38 @@ export class AdminComponent implements OnInit {
     return null;
   }
 
+  //Remove any event images
+  removeImage(id: number) {
+    this.eventImages.update((images) => images.filter((image, index) => index != id))
+    this.base64ImagesData.update((images) => images.filter((image, index) => index != id))
+  }
+
+  minForLastDay() {
+    if(this.multyDayEvent().get('firstDay')?.value) {
+      const date = new Date(this.multyDayEvent().get('firstDay')?.value);
+      date.setDate((date.getDate() + 1))
+      return date.toISOString().split("T")[0]
+    } else {
+      return new Date().toISOString().split("T")[0]
+    }
+  }
+
+  minForUpdateLastDay() {
+    if(this.updateMultyDayEvent().get('firstDay')?.value) {
+      const date = new Date(this.updateMultyDayEvent().get('firstDay')?.value);
+      date.setDate((date.getDate() + 1))
+      return date.toISOString().split("T")[0]
+    } else {
+      return new Date().toISOString().split("T")[0]
+    }
+  }
+
   //To reset form
   resetForm() {
+    this.singleDayEvent().reset()
+    this.multyDayEvent().reset()
+    this.weekDaysData.set([]);
+    this.monthEvent().reset()
     this.clearUpload();
     this.eventForm().reset();
     this.localStorage.removeItem('EventDetails');
@@ -313,17 +511,26 @@ export class AdminComponent implements OnInit {
       image: '',
       place: data.place,
       description: data.description,
-      date: data.date,
+      type: data.date.singleDay ? '1' : data.date.multiDay ? '2' : data.date.everyWeekEvent ? '3' : data.date.everyMonthEvent ? '4' : '' ,
       // participants: [[''],[]]
     });
-    const file = this.base64ToFile(data.image, 'Event Image');
+    this.updateSingleDayEvent().setValue({ date: data.date.singleDay ? data.date.date[0] : '' })
+    this.updateMultyDayEvent().setValue({ firstDay: data.date.multiDay ? data.date.date[0] : '', secondDay: data.date.multiDay ? data.date.date[1] : '' })
+    this.updateMonthEvent().setValue({ days: data.date.everyMonthEvent ? data.date.date[0] : '' })
+    this.updateWeekDaysData.update(() => data.date.everyWeekEvent ? data.date.weekDay! : [] )
+    const file = this.base64ToFile(data.bannerImage, 'Event Image');
     this.imageFile.update(() => file);
     this.fileName.update(() => 'Event Image');
     this.fileImage.update(() => URL.createObjectURL(file!));
-    this.base64ImageData.set(data.image);
+    this.base64ImageData.set(data.bannerImage);
     this.updateEventForm().get('image')?.removeValidators(Validators.required);
     this.updateEventForm().markAsTouched();
     this.updateEventForm().updateValueAndValidity();
+    data.images.forEach((e) => {
+      const file = this.base64ToFile(e, 'Event Image');
+      this.eventImages.update((image) => [...image, URL.createObjectURL(file!)]);
+      this.base64ImagesData.update((image) => [...image, e]);
+    })
 }
 
   closeUpdateEventForm() {
@@ -334,14 +541,40 @@ export class AdminComponent implements OnInit {
   editEvent(id: string) {
     this.store.dispatch(adminActions.processData());
     const data: EventData = {
-      title: this.updateEventForm().get('title')!.value,
-      image: this.base64ImageData() as string,
-      place: this.updateEventForm().get('place')!.value,
-      description: this.updateEventForm().get('description')!.value,
-      date: this.updateEventForm().get('date')!.value,
+      title: this.updateEventForm().get('title')!.value.trim(),
+      bannerImage: this.base64ImageData() as string,
+      images: this.base64ImagesData() as string[],
+      place: this.updateEventForm().get('place')!.value.trim(),
+      description: this.updateEventForm().get('description')!.value.trim(),
+      date: {
+        singleDay: this.updateEventForm().get('type')?.value == '1' ? true : false,
+        multiDay: this.updateEventForm().get('type')?.value == '2' ? true : false,
+        everyWeekEvent: this.updateEventForm().get('type')?.value == '3' ? true : false,
+        everyMonthEvent: this.updateEventForm().get('type')?.value == '4' ? true : false,
+        date: this.getUpdateDate(),
+        weekDay: this.updateEventForm().get('type')?.value == '3' ? this.updateWeekDaysData() : null,
+        odd_eventDay: false
+      },
       participants:this.participants()
     };
     this.store.dispatch(adminActions.updateData({ id: id, eventData: data }));
+    this.eventImages.update((image) => []);
+    this.base64ImagesData.update((image) => []);
+  }
+
+  getUpdateDate(): string[] {
+    switch(this.updateEventForm().get('type')?.value) {
+      case '1':
+        return [this.updateSingleDayEvent().get('date')?.value];
+      case '2':
+        return [this.updateMultyDayEvent().get('firstDay')?.value, this.updateMultyDayEvent().get('secondDay')?.value];
+      case '3':
+        return this.updateWeekDaysData();
+      case '4':
+        return [this.updateMonthEvent().get('days')?.value];
+      default:
+      return [];
+    }
   }
 
   resetUpdateEventForm() {

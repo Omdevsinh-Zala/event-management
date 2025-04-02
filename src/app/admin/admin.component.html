@@ -7,8 +7,17 @@
 @let placeEmpty = eventForm().get('place')?.value == '' || eventForm().get('place')?.value == null;
 @let desRequired = eventForm().get('description')?.touched && eventForm().get('description')?.dirty && eventForm().get('description')?.hasError('required');
 @let desEmpty = eventForm().get('description')?.value == '' || eventForm().get('description')?.value == null;
-@let dateRequired = eventForm().get('date')?.touched && eventForm().get('date')?.dirty && eventForm().get('date')?.hasError('required');
-@let dateEmpty = eventForm().get('date')?.value == '' || eventForm().get('date')?.value == null;
+@let typeRequired = eventForm().get('type')?.touched && eventForm().get('type')?.dirty && eventForm().get('type')?.hasError('required');
+@let typeEmpty = eventForm().get('type')?.value == '' || eventForm().get('type')?.value == null;
+@let singleDayRequired = singleDayEvent().get('date')?.touched && singleDayEvent().get('date')?.dirty && singleDayEvent().get('date')?.hasError('required');
+@let singleDayEmpty = singleDayEvent().get('date')?.value == '' || singleDayEvent().get('date')?.value == null;
+@let multyDayRequired1 = multyDayEvent().get('firstDay')?.touched && multyDayEvent().get('firstDay')?.dirty && multyDayEvent().get('firstDay')?.hasError('required');
+@let multyDayEmpty1 = multyDayEvent().get('firstDay')?.value == '' || multyDayEvent().get('firstDay')?.value == null;
+@let multyDayRequired2 = multyDayEvent().get('secondDay')?.touched && multyDayEvent().get('secondDay')?.dirty && multyDayEvent().get('secondDay')?.hasError('required');
+@let multyDayEmpty2 = multyDayEvent().get('secondDay')?.value == '' || multyDayEvent().get('secondDay')?.value == null;
+@let monthlyRequired = monthEvent().get('days')?.touched && monthEvent().get('days')?.dirty && monthEvent().get('days')?.hasError('required');
+@let monthlyEmpty = monthEvent().get('days')?.value == '' || monthEvent().get('days')?.value == null;
+@let anyDateEmpty = singleDayEmpty && (multyDayEmpty1 || multyDayEmpty2) && weekDaysData().length == 0 && monthlyEmpty;
 <!-- @let participantsRequired = eventForm().get('participants')?.touched && eventForm().get('participants')?.dirty && eventForm().get('participants')?.hasError('required');
 @let participantsEmpty = eventForm().get('participants')?.value == ''; -->
 
@@ -21,8 +30,17 @@
 @let updatePlaceEmpty = updateEventForm().get('place')?.value == '' || updateEventForm().get('place')?.value == null;
 @let updateDesRequired = updateEventForm().get('description')?.touched && updateEventForm().get('description')?.dirty && updateEventForm().get('description')?.hasError('required');
 @let updateDesEmpty = updateEventForm().get('description')?.value == '' || updateEventForm().get('description')?.value == null;
-@let updateDateRequired = updateEventForm().get('date')?.touched && updateEventForm().get('date')?.dirty && updateEventForm().get('date')?.hasError('required');
-@let updateDateEmpty = updateEventForm().get('date')?.value == '' || updateEventForm().get('date')?.value == null;
+@let updateTypeRequired = updateEventForm().get('type')?.touched && updateEventForm().get('type')?.dirty && updateEventForm().get('type')?.hasError('required');
+@let updateTypeEmpty = updateEventForm().get('type')?.value == '' || updateEventForm().get('type')?.value == null;
+@let updateSingleDayRequired = updateSingleDayEvent().get('date')?.touched && updateSingleDayEvent().get('date')?.dirty && updateSingleDayEvent().get('date')?.hasError('required');
+@let updateSingleDayEmpty = updateSingleDayEvent().get('date')?.value == '' || updateSingleDayEvent().get('date')?.value == null;
+@let updatemultyDayRequired1 = updateMultyDayEvent().get('firstDay')?.touched && updateMultyDayEvent().get('firstDay')?.dirty && updateMultyDayEvent().get('firstDay')?.hasError('required');
+@let updatemultyDayEmpty1 = updateMultyDayEvent().get('firstDay')?.value == '' || updateMultyDayEvent().get('firstDay')?.value == null;
+@let updatemultyDayRequired2 = updateMultyDayEvent().get('secondDay')?.touched && updateMultyDayEvent().get('secondDay')?.dirty && updateMultyDayEvent().get('secondDay')?.hasError('required');
+@let updatemultyDayEmpty2 = updateMultyDayEvent().get('secondDay')?.value == '' || updateMultyDayEvent().get('secondDay')?.value == null;
+@let updateMonthlyRequired = updateMonthEvent().get('days')?.touched && updateMonthEvent().get('days')?.dirty && updateMonthEvent().get('days')?.hasError('required');
+@let updateMonthlyEmpty = updateMonthEvent().get('days')?.value == '' || updateMonthEvent().get('days')?.value == null;
+@let anyUpdateDateEmpty = updateSingleDayEmpty && (updatemultyDayEmpty1 || updatemultyDayEmpty2) && updateWeekDaysData().length == 0 && updateMonthlyEmpty;
 <!-- @let updateParticipantsRequired = updateEventForm().get('participants')?.touched && updateEventForm().get('participants')?.dirty && updateEventForm().get('participants')?.hasError('required');
 @let updateParticipantsEmpty = updateEventForm().get('participants')?.value == ''; -->
 
@@ -59,7 +77,7 @@
   <h2 class="text-4xl py-4 dark:text-white">Events</h2>
   @if ((showModel$() | async) == true) {
       <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black dark:bg-opacity-80 dark:bg-white !transition-all !duration-300 scale-0 z-40" [ngClass]="{'!opacity-100 !visible !scale-100': showaddEventModel$() | async }">
-          <div class="relative w-dvw h-dvh" (click)=" (titleEmpty && imageEmpty && desEmpty && placeEmpty && dateEmpty) ? toggleModel() : ''">
+          <div class="relative w-dvw h-dvh" (click)=" (titleEmpty && imageEmpty && desEmpty && anyDateEmpty && typeEmpty && placeEmpty && eventImages().length == 0) ? toggleModel() : ''">
             <div class="p-3 lg:p-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 lg:w-1/2 lg:h-2/3" (click)="$event.stopPropagation()">
                 <div class="relative flex flex-col gap-2 w-full h-full rounded-lg p-5 bg-white dark:bg-gray-950 !opacity-0 !transition-all !duration-700 !scale-0" [ngClass]="{ '!opacity-100 !scale-100': showaddEventModel$() | async }">
                     <h3 class="text-3xl dark:text-white">Add Event</h3>
@@ -80,7 +98,7 @@
                             <div class="w-full 2xl:w-1/2 flex justify-start items-center h-24 sm:h-[unset]">
                                 <div class="relative w-full">
                                     <div class="absolute my-auto flex gap-2 2xl:gap-5 items-start w-full justify-between 2xl:justify-[unset] flex-col sm:flex-row sm:items-center">
-                                        <button class="border border-slate-400 py-2 px-4 dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-600 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-md mx-auto lg:mx-0">Upload image</button>
+                                        <button class="border border-slate-400 py-2 px-4 dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-600 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-md mx-auto lg:mx-0">Upload Banner</button>
                                         @if(fileName()) {
                                             <div class="relative w-full sm:w-1/2 dark:text-white">
                                                 <p class="w-40 overflow-hidden whitespace-nowrap text-ellipsis" >{{fileName()}}</p>
@@ -93,7 +111,7 @@
                                         type="file"
                                         formControlName="image"
                                         accept=".png, .jpeg, .jpg"
-                                        (input)="uploadFile($event)"
+                                        (input)="uploadFile($event, 'Banner')"
                                         id="file"
                                         #file
                                     />
@@ -113,6 +131,40 @@
                                     }
                                 </div>
                             </div>
+                        </div>
+                        <div class="relative flex justify-[unset] gap-4 h-max shrink-0 2xl:h-20 flex-col 2xl:flex-row 2xl:justify-between">
+                            <p class="absolute -top-4 left-0 text-sm flex items-center dark:text-slate-200">Upload images related to events, venues, or places here.<mat-icon class="text-sm text-black dark:text-white" >arrow_downward</mat-icon></p>
+                            <div class="w-full 2xl:w-1/2 flex justify-start items-center h-20 sm:h-[unset]">
+                                <div class="relative w-full">
+                                    <div class="absolute my-auto flex gap-2 2xl:gap-5 items-start w-full justify-between 2xl:justify-[unset] flex-col sm:flex-row sm:items-center">
+                                        <button class="border border-slate-400 py-2 px-4 dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-600 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-md mx-auto lg:mx-0">Upload Images</button>
+                                    </div>
+                                    <input
+                                        class="w-[132px] opacity-0 file:border-slate-300 file:hover:bg-slate-200 file:bg-slate-100 file:py-2 file:px-4 file:border file:rounded-lg file:transition-colors file:duration-300 file:hover:cursor-pointer"
+                                        type="file"
+                                        accept=".png, .jpeg, .jpg"
+                                        (input)="uploadFile($event, 'Event')"
+                                        id="imagesFile"
+                                        multiple="true"
+                                        #images
+                                    />
+                                    @if (imageRequired) {
+                                        <div
+                                            class="form-error-msg"
+                                        >
+                                        Please provide image.
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative transition-all duration-200 shrink-0 h-0 grid grid-cols-3" [ngClass]="{ '!h-32': eventImages().length > 0 && base64ImagesData().length > 0}">
+                            @for (image of eventImages(); track $index) {
+                                <div [@bubleUp]="eventImages().length"  class="border border-slate-300 rounded-lg h-full w-3/4 mx-auto relative">
+                                    <img class="absolute object-contain rounded-lg top-0 left-0 w-full h-full" [src]="image" >
+                                    <button class="absolute top-1 right-1 bg-white rounded-full text-slate-500 hover:text-slate-950 h-6 transition-all duration-300 flex items-center justify-center z-10" (click)="removeImage($index)" ><mat-icon>close</mat-icon></button>
+                                </div>
+                            }
                         </div>
                         <div class="relative shrink-0">
                             <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
@@ -139,17 +191,98 @@
                             }
                         </div>
                         <div class="relative shrink-0">
-                            <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
-                                type="date" formControlName="date" id="date" autocomplete="new-password" [min]="todayDate" #date>
-                            <label class="label float-label" for="date" >Date<span class="ps-[2px]" [ngClass]="[dateRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
-                            @if (dateRequired) {
+                            <label class="dark:text-white " id="eventType" >Select event type:<span class="ps-[2px]" [ngClass]="[typeRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                            <mat-radio-group aria-labelledby="eventType" aria-label="Select an option" formControlName="type" (change)="typeChange($event)"  #radio>
+                                <mat-radio-button value="1">Singal Day</mat-radio-button>
+                                <mat-radio-button value="2">Multiple Day</mat-radio-button>
+                                <mat-radio-button value="3">Every Week</mat-radio-button>
+                                <mat-radio-button value="4">Every Month</mat-radio-button>
+                              </mat-radio-group>
+                            @if (typeRequired) {
                                 <div
                                     class="form-error-msg"
                                 >
-                                Please enter date.
+                                Please select event type.
                                 </div>
                             }
                         </div>
+                        @switch (eventForm().get('type')?.value) {
+                            @case ("1") {
+                                <form [formGroup]="singleDayEvent()" class="relative shrink-0">
+                                    <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
+                                        type="date" formControlName="date" id="date" autocomplete="new-password" [min]="todayDate" #date>
+                                    <label class="label float-label" for="date" >Date<span class="ps-[2px]" [ngClass]="[singleDayRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                                    @if (singleDayRequired) {
+                                        <div
+                                            class="form-error-msg"
+                                        >
+                                        Please enter date.
+                                        </div>
+                                    }
+                                </form>
+                            }
+                            @case ("2") {
+                                <form class="shrink-0 flex flex-col md:flex-row gap-2 items-center" [formGroup]="multyDayEvent()" >
+                                    <div class="relative w-full" >
+                                        <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
+                                            type="date" formControlName="firstDay" id="firstDate" autocomplete="new-password" [min]="todayDate" #date>
+                                        <label class="label float-label" for="firstDate" >First day<span class="ps-[2px]" [ngClass]="[multyDayRequired1 ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                                        @if (multyDayRequired1) {
+                                            <div
+                                                class="form-error-msg"
+                                            >
+                                            Please enter date.
+                                            </div>
+                                        }
+                                    </div>
+                                    <div>
+                                        <p class="dark:text-white" >-</p>
+                                    </div>
+                                    <div class="relative w-full" >
+                                        <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
+                                            type="date" formControlName="secondDay" id="secondDate" autocomplete="new-password" [min]="minForLastDay()" #date>
+                                        <label class="label float-label" for="secondDate" >Last day<span class="ps-[2px]" [ngClass]="[multyDayRequired2 ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                                        @if (multyDayRequired2) {
+                                            <div
+                                                class="form-error-msg"
+                                            >
+                                            Please enter date.
+                                            </div>
+                                        }
+                                    </div>
+                                </form>
+                            }
+                            @case ("3") {
+                                <div class="relative shrink-0">
+                                    <div class="dark:text-white">Select week day/days</div>
+                                    <div class="flex flex-col md:flex-row gap-2 dark:text-white">
+                                        @for (week of weekDays(); track $index) {
+                                            <mat-checkbox (change)="weekSelection(week['value'])">{{ week['day'] }}</mat-checkbox>
+                                        }
+                                    </div>
+                                    
+                                </div>
+                            }
+                            @case ("4") {
+                                <form [formGroup]="monthEvent()" class="relative shrink-0">
+                                    <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
+                                        type="date" formControlName="days" id="date" autocomplete="new-password" [min]="todayDate" #date>
+                                    <label class="label float-label" for="date" >Date<span class="ps-[2px]" [ngClass]="[monthlyRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                                    @if (monthlyRequired) {
+                                        <div
+                                            class="form-error-msg"
+                                        >
+                                        Please enter date.
+                                        </div>
+                                    }
+                                </form>
+                            }
+                            @default {
+                                <div class="relative shrink-0">
+                                    <p class="dark:text-white">Please select any event type.</p>
+                                </div>
+                            }
+                        }
                         <!-- <div class="relative shrink-0">
                             <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3" 
                                 type="text" formControlName="participants" id="participants" autocomplete="new-password" #participants>
@@ -170,7 +303,7 @@
                         >
                             Reset
                         </button>
-                        <button [disabled]="!eventForm().valid || (formSubmit$() | async)" class="py-2 px-4 w-24 border dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-600 border-slate-400 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-lg leading-none hover:disabled:cursor-not-allowed disabled:opacity-65" (click)="submit()" >
+                        <button [disabled]="!eventForm().valid || (formSubmit$() | async) || anyDateEmpty" class="py-2 px-4 w-24 border dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-600 border-slate-400 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-lg leading-none hover:disabled:cursor-not-allowed disabled:opacity-65" (click)="submit()" >
                             @if (formSubmit$() | async) {
                                 <mat-spinner diameter="18" class="mx-auto" ></mat-spinner>
                             } @else {
@@ -185,7 +318,7 @@
   }
   @if ((showUpdateModel$() | async) == true) {
     <div class="invisible opacity-0 fixed top-0 bottom-0 left-0 right-0 bg-opacity-35 bg-black  dark:bg-opacity-80 dark:bg-white transition-all duration-300 scale-0 z-40" [ngClass]="(showUpdateEventModel$() | async) ? 'scale-100 opacity-100 !visible' : ''">
-        <div class="relative w-dvw h-dvh z-40" (click)=" (updateTitleEmpty && updateImageEmpty && updateDesEmpty && updatePlaceEmpty && updateDateEmpty) ? closeUpdateEventForm() : ''">
+        <div class="relative w-dvw h-dvh z-40" (click)=" (updateTitleEmpty && updateImageEmpty && updateDesEmpty && updatePlaceEmpty && updateTypeEmpty && anyUpdateDateEmpty && eventImages().length == 0) ? closeUpdateEventForm() : ''">
           <div class="p-3 lg:p-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 lg:w-1/2 lg:h-2/3" (click)="$event.stopPropagation()">
               <div class="relative flex flex-col gap-2 w-full h-full rounded-lg p-5 bg-white dark:bg-gray-950 transition-all duration-500 scale-0" [ngClass]="(showUpdateEventModel$() | async) ? 'scale-100' : ''">
                   <h3 class="text-3xl dark:text-white">Update Event</h3>
@@ -219,7 +352,7 @@
                                       type="file"
                                       formControlName="image"
                                       accept=".png, .jpeg, .jpg"
-                                      (input)="uploadFile($event)"
+                                      (input)="uploadFile($event, 'Banner')"
                                       id="file"
                                       #file
                                   />
@@ -240,6 +373,40 @@
                               </div>
                           </div>
                       </div>
+                      <div class="relative flex justify-[unset] gap-4 h-max shrink-0 2xl:h-20 flex-col 2xl:flex-row 2xl:justify-between">
+                        <p class="absolute -top-4 left-0 text-sm flex items-center dark:text-slate-200">Upload images related to events, venues, or places here.<mat-icon class="text-sm text-black dark:text-white" >arrow_downward</mat-icon></p>
+                        <div class="w-full 2xl:w-1/2 flex justify-start items-center h-20 sm:h-[unset]">
+                            <div class="relative w-full">
+                                <div class="absolute my-auto flex gap-2 2xl:gap-5 items-start w-full justify-between 2xl:justify-[unset] flex-col sm:flex-row sm:items-center">
+                                    <button class="border border-slate-400 py-2 px-4 dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-600 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-md mx-auto lg:mx-0">Upload Images</button>
+                                </div>
+                                <input
+                                    class="w-[132px] opacity-0 file:border-slate-300 file:hover:bg-slate-200 file:bg-slate-100 file:py-2 file:px-4 file:border file:rounded-lg file:transition-colors file:duration-300 file:hover:cursor-pointer"
+                                    type="file"
+                                    accept=".png, .jpeg, .jpg"
+                                    (input)="uploadFile($event, 'Event')"
+                                    id="imagesFile"
+                                    multiple="true"
+                                    #images
+                                />
+                                @if (imageRequired) {
+                                    <div
+                                        class="form-error-msg"
+                                    >
+                                    Please provide image.
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative transition-all duration-200 shrink-0 h-0 grid grid-cols-3" [ngClass]="{ '!h-32': eventImages().length > 0 && base64ImagesData().length > 0}">
+                        @for (image of eventImages(); track $index) {
+                            <div [@bubleUp]="eventImages().length"  class="border border-slate-300 rounded-lg h-full w-3/4 mx-auto relative">
+                                <img class="absolute object-contain rounded-lg top-0 left-0 w-full h-full" [src]="image" >
+                                <button class="absolute top-1 right-1 bg-white rounded-full text-slate-500 hover:text-slate-950 h-6 transition-all duration-300 flex items-center justify-center z-10" (click)="removeImage($index)" ><mat-icon>close</mat-icon></button>
+                            </div>
+                        }
+                    </div>
                       <div class="relative shrink-0">
                           <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:hover:bg-slate-700 dark:focus:ring-slate-100" 
                               type="text" formControlName="place" id="place" autocomplete="new-password" #place>
@@ -265,17 +432,98 @@
                           }
                       </div>
                       <div class="relative shrink-0">
-                          <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
-                              type="date" formControlName="date" id="date" autocomplete="new-password" [min]="todayDate" #date>
-                          <label class="label float-label" for="date" >Date<span class="ps-[2px]" [ngClass]="[updateDateRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
-                          @if (updateDateRequired) {
-                              <div
-                                  class="form-error-msg"
-                              >
-                              Please enter date.
-                              </div>
-                          }
-                      </div>
+                        <label class="dark:text-white " id="eventType" >Select event type:<span class="ps-[2px]" [ngClass]="[updateTypeRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                        <mat-radio-group aria-labelledby="eventType" aria-label="Select an option" formControlName="type" (change)="updateTypeChanges($event)"  #radio>
+                            <mat-radio-button value="1">Singal Day</mat-radio-button>
+                            <mat-radio-button value="2">Multiple Day</mat-radio-button>
+                            <mat-radio-button value="3">Every Week</mat-radio-button>
+                            <mat-radio-button value="4">Every Month</mat-radio-button>
+                          </mat-radio-group>
+                        @if (updateTypeRequired) {
+                            <div
+                                class="form-error-msg"
+                            >
+                            Please select event type.
+                            </div>
+                        }
+                    </div>
+                    @switch (updateEventForm().get('type')?.value) {
+                        @case ("1") {
+                            <form [formGroup]="updateSingleDayEvent()" class="relative shrink-0">
+                                <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
+                                    type="date" formControlName="date" id="date" autocomplete="new-password" [min]="todayDate" #date>
+                                <label class="label float-label" for="date" >Date<span class="ps-[2px]" [ngClass]="[updateSingleDayRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                                @if (singleDayRequired) {
+                                    <div
+                                        class="form-error-msg"
+                                    >
+                                    Please enter date.
+                                    </div>
+                                }
+                            </form>
+                        }
+                        @case ("2") {
+                            <form class="shrink-0 flex flex-col md:flex-row gap-2 items-center" [formGroup]="updateMultyDayEvent()" >
+                                <div class="relative w-full" >
+                                    <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
+                                        type="date" formControlName="firstDay" id="firstDate" autocomplete="new-password" [min]="todayDate" #date>
+                                    <label class="label float-label" for="firstDate" >First day<span class="ps-[2px]" [ngClass]="[updatemultyDayRequired1 ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                                    @if (updatemultyDayRequired1) {
+                                        <div
+                                            class="form-error-msg"
+                                        >
+                                        Please enter date.
+                                        </div>
+                                    }
+                                </div>
+                                <div>
+                                    <p class="dark:text-white" >-</p>
+                                </div>
+                                <div class="relative w-full" >
+                                    <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
+                                        type="date" formControlName="secondDay" id="secondDate" autocomplete="new-password" [min]="minForUpdateLastDay()" #date>
+                                    <label class="label float-label" for="secondDate" >Last day<span class="ps-[2px]" [ngClass]="[updatemultyDayRequired2 ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                                    @if (updatemultyDayRequired2) {
+                                        <div
+                                            class="form-error-msg"
+                                        >
+                                        Please enter date.
+                                        </div>
+                                    }
+                                </div>
+                            </form>
+                        }
+                        @case ("3") {
+                            <div class="relative shrink-0">
+                                <div class="dark:text-white">Select week day/days</div>
+                                <div class="flex flex-col md:flex-row gap-2 dark:text-white">
+                                    @for (week of weekDays(); track $index) {
+                                        <mat-checkbox (change)="updateWeekSelection(week['value'])" [checked]="updateWeekDaysData().includes(week['value'])" >{{ week['day'] }}</mat-checkbox>
+                                    }
+                                </div>
+                                
+                            </div>
+                        }
+                        @case ("4") {
+                            <form [formGroup]="updateMonthEvent()" class="relative shrink-0">
+                                <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3 focus:ring-4 focus:ring-slate-200 dark:text-white dark:bg-slate-800 dark:focus:border-slate-300 dark:focus:ring-slate-100" 
+                                    type="date" formControlName="days" id="date" autocomplete="new-password" [min]="todayDate" #date>
+                                <label class="label float-label" for="date" >Date<span class="ps-[2px]" [ngClass]="[updateMonthlyRequired ? 'text-pink-600 peer-focus:text-inherit' : '']" >*</span></label>
+                                @if (updateMonthlyRequired) {
+                                    <div
+                                        class="form-error-msg"
+                                    >
+                                    Please enter date.
+                                    </div>
+                                }
+                            </form>
+                        }
+                        @default {
+                            <div class="relative shrink-0">
+                                <p class="dark:text-white">Please select any event type.</p>
+                            </div>
+                        }
+                    }
                       <!-- <div class="relative shrink-0">
                           <input class="transition-all duration-300 peer outline-none border focus:border-slate-400 w-full rounded-md p-3" 
                               type="text" formControlName="participants" id="participants" autocomplete="new-password" #participants>
@@ -297,7 +545,7 @@
                           Close
                       </button>
                       @let eventId = eventId$ | async;
-                      <button [disabled]="!updateEventForm().valid || (formSubmit$() | async)" class="py-2 px-4 w-24 border dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-600 border-slate-400 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-lg leading-none hover:disabled:cursor-not-allowed disabled:opacity-65" (click)="editEvent(eventId!)" >
+                      <button [disabled]="!updateEventForm().valid || (formSubmit$() | async) || anyUpdateDateEmpty" class="py-2 px-4 w-24 border dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-600 border-slate-400 bg-slate-100 hover:bg-slate-200 hover:cursor-pointer rounded-lg leading-none hover:disabled:cursor-not-allowed disabled:opacity-65" (click)="editEvent(eventId!)" >
                           @if (formSubmit$() | async) {
                               <mat-spinner diameter="18" class="mx-auto" ></mat-spinner>
                           } @else {

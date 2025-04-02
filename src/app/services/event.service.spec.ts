@@ -25,10 +25,19 @@ describe('EventService', () => {
 
   const data:EventData = {
     title: '',
-    image: '',
-    description: '',
+    bannerImage: '',
+    images: [],
     place: '',
-    date: '',
+    description: '',
+    date: {
+      singleDay: true,
+      date: [],
+      everyMonthEvent: false,
+      everyWeekEvent: false,
+      multiDay: false,
+      odd_eventDay: false,
+      weekDay: []
+    },
     participants: []
   }
 

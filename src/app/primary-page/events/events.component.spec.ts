@@ -47,11 +47,11 @@ describe('EventsComponent', () => {
   it('should return true/false depending the date comparision of current and event date', () => {
     const date = new Date()
     const getTime = component.today.getTime = jest.fn().mockReturnValue(date)
-    const result_1 = component.isFuterEvent('2022-12-12');
+    const result_1 = component.isFuterEvent(['2022-12-12']);
     expect(getTime).toHaveBeenCalled()
     expect(result_1).toBe(false)
 
-    const result_2 = component.isFuterEvent('12-12-2025');
+    const result_2 = component.isFuterEvent(['12-12-2025']);
     expect(getTime).toHaveBeenCalled()
     expect(result_2).toBe(true)
   })
@@ -59,10 +59,19 @@ describe('EventsComponent', () => {
   it('should check if the user is already register or not', () => {
     const data:EventData = {
       title: '',
-      image: '',
+      bannerImage: '',
+      images: [],
       place: '',
       description: '',
-      date: '',
+      date: {
+        singleDay: true,
+        date: [],
+        everyMonthEvent: false,
+        everyWeekEvent: false,
+        multiDay: false,
+        odd_eventDay: false,
+        weekDay: []
+      },
       participants: ['123','234']
     }
     component['auth'].getuid = jest.fn().mockReturnValue('123')
@@ -75,10 +84,19 @@ describe('EventsComponent', () => {
 
     const newData:EventData = {
       title: '',
-      image: '',
+      bannerImage: '',
+      images: [],
       place: '',
       description: '',
-      date: '',
+      date: {
+        singleDay: true,
+        date: [],
+        everyMonthEvent: false,
+        everyWeekEvent: false,
+        multiDay: false,
+        odd_eventDay: false,
+        weekDay: []
+      },
       participants: []
     }
     component['auth'].getuid = jest.fn().mockReturnValue('123')
@@ -91,19 +109,37 @@ describe('EventsComponent', () => {
     component['auth'].getuid = jest.fn().mockReturnValue('34')
     const data:EventData = {
       title: '',
-      image: '',
+      bannerImage: '',
+      images: [],
       place: '',
       description: '',
-      date: '',
+      date: {
+        singleDay: true,
+        date: [],
+        everyMonthEvent: false,
+        everyWeekEvent: false,
+        multiDay: false,
+        odd_eventDay: false,
+        weekDay: []
+      },
       participants: []
     }
     component.registerUser(data, '123');
     const newData:EventData = {
       title: '',
-      image: '',
+      bannerImage: '',
+      images: [],
       place: '',
       description: '',
-      date: '',
+      date: {
+        singleDay: true,
+        date: [],
+        everyMonthEvent: false,
+        everyWeekEvent: false,
+        multiDay: false,
+        odd_eventDay: false,
+        weekDay: []
+      },
       participants: ['34']
     }
     expect(store).toHaveBeenCalledWith('123', newData)

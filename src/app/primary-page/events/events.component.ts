@@ -29,16 +29,17 @@ export class EventsComponent implements OnInit {
   }
 
   //To check event date with current date
-  isFuterEvent(date: string):boolean {
+  isFuterEvent(date: string[]):boolean {
     this.today.setHours(0,0,0,0);
-    return new Date(date).getTime() >= this.today.getTime();
+    return new Date(date[0]).getTime() >= this.today.getTime();
   }
   registerUser(data:EventData, id: string) {
     let newData: EventData;
     if(data.participants) {
       newData = { 
         title: data.title,
-        image: data.image,
+        bannerImage: data.bannerImage,
+        images: data.images,
         description: data.description,
         place: data.place,
         date: data.date,
@@ -47,7 +48,8 @@ export class EventsComponent implements OnInit {
     } else {
       newData = { 
         title: data.title,
-        image: data.image,
+        bannerImage: data.bannerImage,
+        images: data.images,
         description: data.description,
         place: data.place,
         date: data.date,

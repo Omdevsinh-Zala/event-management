@@ -30,9 +30,9 @@ export class HomeComponent implements OnInit {
   }
 
   //To check event date with current date
-  isFuterEvent(date: string):boolean {
+  isFuterEvent(date: string[]):boolean {
     this.today.setHours(0,0,0,0);
-    return new Date(date).getTime() >= this.today.getTime();
+    return new Date(date[0]).getTime() >= this.today.getTime();
   }
 
   userEvents(data: string[]) {
@@ -51,7 +51,8 @@ export class HomeComponent implements OnInit {
     const updatedParticipants = data.participants.filter((uid) => uid !== this.auth.getuid());
       newData = { 
         title: data.title,
-        image: data.image,
+        bannerImage: data.bannerImage,
+        images: data.images,
         description: data.description,
         place: data.place,
         date: data.date,

@@ -166,7 +166,8 @@ export class EventsStore extends ComponentStore<InitialState> {
         const updatedParticipants = data[0].participants.filter((uid) => uid !== this.auth.getuid());
         newData = { 
             title: data[0].title,
-            image: data[0].image,
+            bannerImage: data[0].bannerImage,
+            images: data[0].images,
             description: data[0].description,
             place: data[0].place,
             date: data[0].date,

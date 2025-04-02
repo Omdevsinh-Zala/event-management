@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, input, OnInit, output, signal, ViewChild } from '@angular/core';
-import { EventData } from '../admin/module';
+import { EventData, weekDay } from '../admin/module';
 import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { LocalstorageService } from '../services/localstorage.service';
@@ -44,12 +44,28 @@ export class EventCardComponent implements OnInit {
     });
   }
 
+  weekDays = signal(weekDay)
+
+  getWeekDay(data: string) {
+    return this.weekDays().filter((week) => week['value'] == data)
+  }
+
   private localStorage = inject(LocalstorageService);
   today = new Date();
   userRole = JSON.parse(this.localStorage.getItem('user')!);
-  isFuterEvent(date: string):boolean {
-    this.today.setHours(0,0,0,0)
-    return new Date(date).getTime() >= this.today.getTime();
+
+  isFuterEvent(date: string[]):boolean {
+    if(weekDay.find((week) => week['value'] == date[0])) {
+      const currentDay = new Date().getDay()
+      if(currentDay == Number(date[0])) {
+        return false
+      } else {
+        return true
+      }
+    } else {
+      this.today.setHours(0,0,0,0)
+      return new Date(date[0]).getTime() >= this.today.getTime();
+    }
   }
 
   toggleInInspect() {
