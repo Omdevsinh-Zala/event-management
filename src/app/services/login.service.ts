@@ -37,12 +37,7 @@ export class LoginService {
 
   async loginWithGoole() {
     const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(this.authService.getAuth(), provider);
-      return null
-    } catch(error) {
-      return null;
-    }
+    return await signInWithPopup(this.authService.getAuth(), provider);
   }
 
   singOut() {
