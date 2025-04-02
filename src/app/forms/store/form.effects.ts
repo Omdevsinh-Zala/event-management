@@ -157,13 +157,13 @@ export class FormsEfects {
     loginWithGoogleEffect$ = createEffect((actions$ = inject(Actions), loginService = inject(LoginService), message = inject(MessageService)) => {
         return actions$.pipe(
             ofType(formActions.loginUserWithGoogle),
-            switchMap(( value ) => {
+            switchMap(() => {
                 return from(loginService.loginWithGoole()).pipe(
                     map(() => {
                         return formActions.loginUserWithFirstore();
                     }),
                     catchError((err:FirebaseError) => {
-                        message.error(err.code)
+                        message.error(err.code.split('/')[1])
                         return of(formActions.error({ error: err.code.split('/')[1] }))
                     })
                 )
