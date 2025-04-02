@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { HomeStore } from './home.store';
 import { AuthService } from '../../services/auth.service';
-import { EventData } from '../../admin/module';
+import { EventData, weekDay } from '../../admin/module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -24,15 +24,38 @@ export class HomeComponent implements OnInit {
   unRegisterEventId$ = this.store.registerEventId$;
   unRegisterEventLoading$ = this.store.registerEventLoading$;
   private auth = inject(AuthService);
-
+  
   ngOnInit(): void {
     this.store.getEventData();
+  }
+  
+  weekDays = signal(weekDay)
+
+  getWeekDay(data: string) {
+    return this.weekDays().filter((week) => week['value'] == data)
   }
 
   //To check event date with current date
   isFuterEvent(date: string[]):boolean {
-    this.today.setHours(0,0,0,0);
-    return new Date(date[0]).getTime() >= this.today.getTime();
+    if(weekDay.find((week) => week['value'] == date[0])) {
+      if(date.length >= 2) {
+        return true
+      } else {
+        const currentDay = new Date().getDay()
+        if(currentDay == Number(date[0])) {
+          return false
+        } else {
+          return true
+        }
+      }
+    } else {
+      this.today.setHours(0,0,0,0)
+      if(date.length >= 2) {
+        return new Date(date[1]).getTime() >= this.today.getTime();
+      } else {
+        return new Date(date[0]).getTime() >= this.today.getTime();
+      }
+    }
   }
 
   userEvents(data: string[]) {

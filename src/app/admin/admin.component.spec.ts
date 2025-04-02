@@ -35,14 +35,6 @@ describe('AdminComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return true/false depending the date comparision of current and event date', () => {
-    const result_1 = component.isFuterEvent('2022-12-12');
-    expect(result_1).toBe(false)
-
-    const result_2 = component.isFuterEvent('12-12-2025');
-    expect(result_2).toBe(true)
-  })
-
   it('should get event data and bind load/resize on load time', () => {
     const store = component.store.dispatch = jest.fn()
     const eventListener = window.addEventListener = jest.fn();

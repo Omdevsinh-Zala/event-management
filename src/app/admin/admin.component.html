@@ -568,8 +568,6 @@
             @for (event of (eventData$() | async); track $index) {
                 @let id = (eventIds$() | async)![$index];
                 <app-event-card [event]="event" [eventId]="id" [targetId]="(eventId$ | async)!" (deleteEvent)="deleteEvent($event)" [requiredSpace]="space()" (editEvent)="openUpdateEventForm($event, event)" />
-                <!-- @if (isFuterEvent(event.date)) {
-                } -->
             }
         </div>
             } @else {

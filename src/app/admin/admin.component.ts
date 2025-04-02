@@ -94,9 +94,6 @@ export class AdminComponent implements OnInit {
 
   todayDate = new Date().toISOString().split("T")[0];
 
-  isFuterEvent(date: string):boolean {
-    return new Date(date).getTime() > new Date().getTime();
-  }
   ngOnInit(): void {
     //To get events data
     this.store.dispatch(adminActions.getEventData());
@@ -346,6 +343,8 @@ export class AdminComponent implements OnInit {
       }
       this.store.dispatch(adminActions.submitData({ data: data }));
       this.eventForm().reset();
+      this.clearUpload()
+      this.model.update(() => false)
     },500);
   }
 
@@ -558,8 +557,7 @@ export class AdminComponent implements OnInit {
       participants:this.participants()
     };
     this.store.dispatch(adminActions.updateData({ id: id, eventData: data }));
-    this.eventImages.update((image) => []);
-    this.base64ImagesData.update((image) => []);
+    this.clearUpload()
   }
 
   getUpdateDate(): string[] {

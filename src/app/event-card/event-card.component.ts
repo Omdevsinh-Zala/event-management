@@ -56,15 +56,23 @@ export class EventCardComponent implements OnInit {
 
   isFuterEvent(date: string[]):boolean {
     if(weekDay.find((week) => week['value'] == date[0])) {
-      const currentDay = new Date().getDay()
-      if(currentDay == Number(date[0])) {
-        return false
-      } else {
+      if(date.length >= 2) {
         return true
+      } else {
+        const currentDay = new Date().getDay()
+        if(currentDay == Number(date[0])) {
+          return false
+        } else {
+          return true
+        }
       }
     } else {
       this.today.setHours(0,0,0,0)
-      return new Date(date[0]).getTime() >= this.today.getTime();
+      if(date.length >= 2) {
+        return new Date(date[1]).getTime() >= this.today.getTime();
+      } else {
+        return new Date(date[0]).getTime() >= this.today.getTime();
+      }
     }
   }
 
