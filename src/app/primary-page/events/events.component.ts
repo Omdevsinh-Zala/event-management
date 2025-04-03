@@ -62,7 +62,7 @@ export class EventsComponent implements OnInit {
       newData = { 
         title: data.title,
         bannerImage: data.bannerImage,
-        images: data.images,
+        images: data.images || [],
         description: data.description,
         place: data.place,
         date: data.date,
@@ -72,7 +72,7 @@ export class EventsComponent implements OnInit {
       newData = { 
         title: data.title,
         bannerImage: data.bannerImage,
-        images: data.images,
+        images: data.images || [],
         description: data.description,
         place: data.place,
         date: data.date,

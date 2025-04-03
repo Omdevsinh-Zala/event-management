@@ -75,13 +75,13 @@ export class HomeComponent implements OnInit {
       newData = { 
         title: data.title,
         bannerImage: data.bannerImage,
-        images: data.images,
+        images: data.images || [],
         description: data.description,
         place: data.place,
         date: data.date,
         participants: updatedParticipants
       };
-    this.store.updateEventsData(id, newData);
+    this.store.removeEventDataFromUser(id, newData);
   }
 
   shouldShow(data: EventData[] | null) {

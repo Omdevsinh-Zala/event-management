@@ -37,11 +37,11 @@ import { single } from 'rxjs';
         transition(':enter', [
           style({ opacity: 0, scale: 0 }),
           animate('300ms ease-in', style({ opacity:1, scale: 1 }))
-        ], { delay: '300ms' }),
+        ]),
         transition(':leave', [
           style({ opacity:1, scale: 1 }),
           animate('300ms ease-in', style({ opacity:0, scale:0 }))
-        ], { delay: '300ms' })
+        ])
       ]
     )
   ]

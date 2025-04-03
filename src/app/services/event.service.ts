@@ -8,7 +8,7 @@ import { from, ReplaySubject } from 'rxjs';
 })
 export class EventService {
   private db:Database;
-  private readonly path = 'events';
+  private readonly path = 'events-beta';
   private eventsData = new ReplaySubject<{[key: string]: EventData} | null>();
   private eventsData$ = this.eventsData.asObservable()
   

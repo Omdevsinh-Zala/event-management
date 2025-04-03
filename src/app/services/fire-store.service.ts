@@ -47,12 +47,12 @@ export class FireStoreService {
     const userData = await getDoc(userCollection);
     const user = { ...userData.data() };
     let data;
-    if(user['events']) {
-      const array = user['events'];
+    if(user['events-beta']) {
+      const array = user['events-beta'];
       array.push(eventId)
-      data = { events: array };
+      data = { 'events-beta': array };
     } else {
-      data = { events: [eventId] }
+      data = { 'events-beta': [eventId] }
     }
     return await updateDoc(userCollection, data);
   }
@@ -61,16 +61,16 @@ export class FireStoreService {
     const userCollection = doc(this.fireStore, this.userPath, id);
     const userData = await getDoc(userCollection);
     const user = { ...userData.data() };
-    const array = user['events']!.filter((uid: string) => uid !== eventId);
+    const array = user['events-beta']!.filter((uid: string) => uid !== eventId);
     const data = {
-      events: array
+      'events-beta': array
     }
     await updateDoc(userCollection, data);
   }
 
   getUserFromEvent(id: string) {
     const userCollection = collection(this.fireStore, this.userPath);
-    const filter = query(userCollection, where('events', 'array-contains', id));
+    const filter = query(userCollection, where('events-beta', 'array-contains', id));
     return collectionData(filter);
   }
 }
