@@ -76,22 +76,18 @@ export class HomeStore extends ComponentStore<InitialState> {
 
     private regsterUser$ = this.effect((data$:Observable<{ id: string, data:EventData }>) => {
         return data$.pipe(
-            tap((data) => {
-                this.setRegisterEventId(data.id)
-                this.setRegisterEventLoading(true)
-            }),
             delay(100),
             switchMap((data) => {
                 return this.eventService.updateData(data.id, data.data).pipe(
                     tapResponse({
                         next:() => {
                             this.setEventData([data.data]);
-                            this.removeEventDataFromUser(data.id);
+                            this.setRegisterEventId('');
+                            this.setLoading(false)
                         },
                         error:(err: any) => {
-                            this.message.error(err.message);
-                            this.setRegisterEventId('');
-                            this.setRegisterEventLoading(false);
+                            this.message.error(err.code.split('/')[1] || err.code);
+                            this.undoEventData()
                         }
                     })
                 )
@@ -99,19 +95,24 @@ export class HomeStore extends ComponentStore<InitialState> {
         )
     })
 
-    private removeEventDataFromUser$ = this.effect((data$:Observable<{ id: string, eventId: string }>) => {
+    private removeEventDataFromUser$ = this.effect((data$:Observable<{ id: string, eventId: string, eventData: EventData }>) => {
         return data$.pipe(
+            tap((data) => {
+                this.setRegisterEventId(data.eventId)
+                this.setRegisterEventLoading(true)
+                this.setEventData([data.eventData]);
+            }),
             delay(100),
             switchMap((data) => {
                 return from(this.firebaseStore.removeEventData(data.id, data.eventId)).pipe(
                     tapResponse({
                         next:() => {
-                            this.setRegisterEventId('');
-                            this.setRegisterEventLoading(false);
+                            this.updateEventsData()
                         },
                         error:(err: any) => {
-                            this.undeEventData();
-                            this.message.error(err.message);
+                            this.message.error(err.code.split('/')[1] || err.code);
+                            this.setRegisterEventId('');
+                            this.setRegisterEventLoading(false);
                         }
                     })
                 )
@@ -123,14 +124,14 @@ export class HomeStore extends ComponentStore<InitialState> {
         return data$.pipe(
             delay(100),
             switchMap((data) => {
-                return from(this.eventService.updateData(data.id, data.data)).pipe(
+                return from(this.firebaseStore.addEventData(this.auth.getuid(), data.id)).pipe(
                     tapResponse({
                         next:() => {
                             this.setRegisterEventId('');
                             this.setRegisterEventLoading(false);
                         },
                         error:(err: any) => {
-                            this.message.error(err.message);
+                            this.message.error(err.code.split('/')[1] || err.code);
                             this.setRegisterEventId('');
                             this.setRegisterEventLoading(false);
                         }
@@ -140,19 +141,21 @@ export class HomeStore extends ComponentStore<InitialState> {
         )
     })
 
-    updateEventsData(id: string, data:EventData) {
-        this.regsterUser$({id:id, data:data});
+    async updateEventsData() {
+        const eventId = await firstValueFrom(this.registerEventId$)
+        const eventData = await firstValueFrom(this.eventData$)
+        this.regsterUser$({id:eventId, data:eventData[0]});
     }
 
     getEventData() {
         this.getEventsData();
     }
 
-    removeEventDataFromUser(eventID: string) {
-        this.removeEventDataFromUser$({ id: this.auth.getuid(), eventId: eventID });
+    removeEventDataFromUser(eventID: string, eventData:EventData) {
+        this.removeEventDataFromUser$({ id: this.auth.getuid(), eventId: eventID, eventData: eventData });
     }
 
-    async undeEventData() {
+    async undoEventData() {
         const eventId = await firstValueFrom(this.registerEventId$);
         const id = this.auth.getuid();
         const eventData = await firstValueFrom(this.eventData$);

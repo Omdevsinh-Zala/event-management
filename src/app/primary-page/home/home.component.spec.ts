@@ -73,7 +73,7 @@ describe('HomeComponent', () => {
   })
 
   it('should un-register from event', () => {
-    const store = component['store'].updateEventsData = jest.fn()
+    const store = component['store'].removeEventDataFromUser = jest.fn()
     const data:EventData = { 
       title: '',
       image: '',

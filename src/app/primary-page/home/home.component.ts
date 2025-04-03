@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit {
         date: data.date,
         participants: updatedParticipants
       };
-    this.store.updateEventsData(id, newData);
+    this.store.removeEventDataFromUser(id, newData);
   }
 
   shouldShow(data: EventData[] | null) {
