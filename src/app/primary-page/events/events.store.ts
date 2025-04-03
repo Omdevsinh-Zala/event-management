@@ -92,7 +92,7 @@ export class EventsStore extends ComponentStore<InitialState> {
                             this.addEventDataToUser();
                         },
                         error:(err: any) => {
-                            this.message.error(err.message);
+                            this.message.error(err.code.split('/')[1] || err.code);
                             this.setRegisterEventId('');
                             this.setRegisterEventLoading(false);
                         }
@@ -116,7 +116,7 @@ export class EventsStore extends ComponentStore<InitialState> {
                             this.setRegisterEventLoading(false);
                         },
                         error:(err: any) => {
-                            this.message.error('Falied to register. Please try agian later');
+                            this.message.error(err.code.split('/')[1] || err.code);
                             this.removeEventData();
                         }
                     })
@@ -140,7 +140,7 @@ export class EventsStore extends ComponentStore<InitialState> {
                             this.setRegisterEventLoading(false);
                         },
                         error:(err: any) => {
-                            this.message.error(err.message);
+                            this.message.error(err.code.split('/')[1] || err.code);
                             this.setRegisterEventId('');
                             this.setRegisterEventLoading(false);
                         }

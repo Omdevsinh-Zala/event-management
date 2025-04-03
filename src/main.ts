@@ -2,10 +2,9 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 import * as Sentry from '@sentry/angular';
-import { environment } from './environments/environment';
 
 Sentry.init({
-  dsn: "https://5d606329ade79cb784b0e47f653f165d@o4508998653837312.ingest.us.sentry.io/4508998658752512",
+  dsn: "",
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration()
