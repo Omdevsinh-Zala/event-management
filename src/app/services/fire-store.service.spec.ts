@@ -44,7 +44,8 @@ describe('FireStoreService', () => {
     email: 'some@thing.com',
     role: 'some',
     uid: 'someUID',
-    events:['1','2']
+    events:['1','2'],
+    'events-beta': ['1','2']
   };
   const mockSnapshot = {
     data: () => data,
@@ -107,10 +108,10 @@ describe('FireStoreService', () => {
     expect(mockDoc).toHaveBeenCalledWith(service['fireStore'], 'users', 'some');
     expect(mockGetDoc).toHaveBeenCalledWith(mockDocRef);
     let data;
-    if(mockSnapshot.data()!['events']) {
-      const array = mockSnapshot.data()!['events'];
+    if(mockSnapshot.data()!['events-beta']) {
+      const array = mockSnapshot.data()!['events-beta'];
       array.push('3');
-      data = { events: array };
+      data = { 'events-beta': array };
     }
     expect(mockUpdateDoc).toHaveBeenCalledWith(mockDocRef, data);
   });
@@ -119,8 +120,8 @@ describe('FireStoreService', () => {
     await service.removeEventData('some', '2');
     expect(mockDoc).toHaveBeenCalledWith(service['fireStore'], 'users', 'some');
     expect(mockGetDoc).toHaveBeenCalledWith(mockDocRef);
-    const array = mockSnapshot.data()!['events'].filter((uid: string) => uid !== '2');
-    let data = { events: array };
+    const array = mockSnapshot.data()!['events-beta'].filter((uid: string) => uid !== '2');
+    let data = { 'events-beta': array };
     expect(mockUpdateDoc).toHaveBeenCalledWith(mockDocRef, data);
   });
 
@@ -139,7 +140,7 @@ describe('FireStoreService', () => {
     const result = await service.addEventData('some','3');
     expect(mockDoc).toHaveBeenCalledWith(service['fireStore'], 'users', 'some');
     expect(mockGetDoc).toHaveBeenCalledWith(mockDocRef);
-    let newData = { events: ['3'] }
+    let newData = { 'events-beta': ['3'] }
     expect(mockUpdateDoc).toHaveBeenCalledWith(mockDocRef, newData);
   })
 
@@ -165,7 +166,7 @@ describe('FireStoreService', () => {
     jest.advanceTimersByTime(300);
 
     expect(mockCollection).toHaveBeenCalledWith(service['fireStore'], 'users')
-    expect(mockWhere).toHaveBeenCalledWith('events', 'array-contains', '2');
+    expect(mockWhere).toHaveBeenCalledWith('events-beta', 'array-contains', '2');
     expect(mockQuery).toHaveBeenCalledWith(mockCollectioRef, mockWhereRef);
     expect(mockCollectioData).toHaveBeenCalledWith(mockQueryRef)
     expect(result).toEqual(mockCollectioDataRef);

@@ -8,5 +8,6 @@ export interface fireStoreUser {
   role: string;
   uid: string;
   events?: string[],
+  'events-beta'?: string[],
   FCMToken?: string
 }

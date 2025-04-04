@@ -59,11 +59,11 @@ export class EventsStore extends ComponentStore<InitialState> {
                 return this.eventService.getEventData().pipe(
                     tapResponse({
                         next:(data) => {
-                            if(data) {
+                            if(data !== null) {
                                 this.setEventsIds(Object.keys(data));
                                 this.setEventsData(Object.values(data));
-                                this.setLoading(false);
                             }
+                            this.setLoading(false);
                         },
                         error:(err: any) => {
                             this.message.error(err)

@@ -52,7 +52,7 @@ export class EventService {
       if(snapshot.exists()) {
         eventData.next(snapshot.val())
       } else {
-        eventData.next(`No Event is associated with ${id}`)
+        eventData.next(`Not an Event`)
       }
     }, (err) => {
       eventData.next(err.message)

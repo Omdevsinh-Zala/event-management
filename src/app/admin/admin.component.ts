@@ -251,7 +251,7 @@ export class AdminComponent implements OnInit {
         this.imageFile.update(() => selectedFiles[0])
         this.fileName.update(() => selectedFiles[0].name);
         this.fileImage.update(() => URL.createObjectURL(selectedFiles[0]));
-        this.base64ImageData.set(await this.imageConvert(selectedFiles[0])!);
+        this.base64ImageData.set(await this.imageConvert(selectedFiles[0], 'Banner')!);
         this.localStorage.setItem('ImageName', this.fileName());
         let data = JSON.parse(this.localStorage.getItem('EventDetails') || '[]');
         if(data) {
@@ -262,7 +262,7 @@ export class AdminComponent implements OnInit {
         const selectedFiles = Array.from(inputElement.files);
         selectedFiles.forEach(async (e) => {
           this.eventImages.update((images) => [...images, URL.createObjectURL(e)]);
-          const data = await this.imageConvert(e)
+          const data = await this.imageConvert(e, 'Event')
           this.base64ImagesData.update((images) => [...images, data]);
         })
         this.images.nativeElement.value = ''
@@ -270,7 +270,31 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  //Remove uploaded file
+  //Remove uploaded banner file
+  clearBannerUpload() {
+    this.file.nativeElement.value = '';
+    this.fileName.update(() => '');
+    this.fileImage.update(() => '');
+    this.imageFile.update(() => null);
+    if(this.eventForm().get('image')) {
+      this.eventForm().get('image')!.addValidators(Validators.required);
+      this.eventForm().get('image')!.reset();
+      this.eventForm().updateValueAndValidity();
+    }
+    this.base64ImageData.update(() => null);
+    this.localStorage.removeItem('ImageName');
+    let data = JSON.parse(this.localStorage.getItem('EventDetails') || '[]');
+      if(data) {
+        data.image = null;
+      }
+    this.localStorage.setItem('EventDetails', JSON.stringify(data));
+  }
+
+  //claer uplaoded event images
+  clearEventUpload(index: number) {
+    this.base64ImagesData.update((images) => images.filter((image, id) => id !== index));
+    this.eventImages.update((images) => images.filter((image, id) => id !== index))
+  }
   clearUpload() {
     this.file.nativeElement.value = '';
     this.fileName.update(() => '');
@@ -288,7 +312,7 @@ export class AdminComponent implements OnInit {
         data.image = null;
       }
     this.localStorage.setItem('EventDetails', JSON.stringify(data));
-    //For event images
+    //For Event Images
     this.base64ImagesData.update(() => [])
     this.eventImages.update(() => [])
   }
@@ -364,7 +388,8 @@ export class AdminComponent implements OnInit {
   }
 
   //Convert File to base64 
-  async imageConvert(data: File) {
+  async imageConvert(data: File, type: 'Banner' | 'Event') {
+    const index = this.eventImages().length - 1;
     const validTypes = [
       'image/jpeg',
       'image/jpg',
@@ -374,7 +399,7 @@ export class AdminComponent implements OnInit {
     if(!(validTypes.includes(data.type))) {
       setTimeout(() => {
         this.message.error('Invalid image format');
-        this.clearUpload();
+        type == 'Banner' ? this.clearBannerUpload() : this.clearEventUpload(index);
         this.store.dispatch(adminActions.error());
       },500);
       return null;
@@ -383,7 +408,7 @@ export class AdminComponent implements OnInit {
       const file = data
       if(!file) {
         this.message.error('Invalid image');
-        this.clearUpload();
+        type == 'Banner' ? this.clearBannerUpload() : this.clearEventUpload(index);
         resolve(null);
         return;
       }
@@ -398,7 +423,7 @@ export class AdminComponent implements OnInit {
       };
       reader.onerror = (error) => {
         this.message.error('Invalid image');
-        this.clearUpload();
+        type == 'Banner' ? this.clearBannerUpload() : this.clearEventUpload(index);
         return reject(null)
       }
     })
@@ -525,7 +550,7 @@ export class AdminComponent implements OnInit {
     this.updateEventForm().get('image')?.removeValidators(Validators.required);
     this.updateEventForm().markAsTouched();
     this.updateEventForm().updateValueAndValidity();
-    data.images.forEach((e) => {
+    data?.images?.forEach((e) => {
       const file = this.base64ToFile(e, 'Event Image');
       this.eventImages.update((image) => [...image, URL.createObjectURL(file!)]);
       this.base64ImagesData.update((image) => [...image, e]);
